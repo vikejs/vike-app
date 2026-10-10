@@ -1,5 +1,5 @@
 import { type App, apply } from "@universal-middleware/hattip";
-import { middlewaresAfterRoutes, middlewaresBeforeRoutes } from "vike/__internal";
+import { middlewaresProxy_handlers, middlewaresProxy_middlewares } from "vike/__internal";
 
 export * from "@universal-middleware/hattip";
 
@@ -20,9 +20,9 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareHattip[] =
   const buildHandler = app.buildHandler;
   app.buildHandler = function (this: App) {
     app.buildHandler = buildHandler;
-    apply(app, [middlewaresAfterRoutes]);
+    apply(app, [middlewaresProxy_handlers]);
     return buildHandler.call(this);
   };
 
-  return apply(app, [...middlewares, middlewaresBeforeRoutes]);
+  return apply(app, [...middlewares, middlewaresProxy_middlewares]);
 }

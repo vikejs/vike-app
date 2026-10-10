@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("vike/__internal", async () => {
   const { enhance } = await import("@universal-middleware/core");
   return {
-    middlewaresBeforeRoutes: enhance(
+    middlewaresProxy_middlewares: enhance(
       async (request: Request, context: Universal.Context) => {
         await new Promise((resolve) => setTimeout(resolve, Number(request.headers.get("x-delay") ?? 0)));
         // Like the real one, it adds to the context and returns nothing or a response step
@@ -20,7 +20,7 @@ vi.mock("vike/__internal", async () => {
       { name: "stub:before" },
     ),
     // Stands for the +middleware that are handlers (here /x), then Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
-    middlewaresAfterRoutes: enhance(
+    middlewaresProxy_handlers: enhance(
       async (request: Request) => {
         const { pathname } = new URL(request.url);
         if (!["GET", "POST", "PUT", "PATCH", "HEAD", "OPTIONS"].includes(request.method)) {

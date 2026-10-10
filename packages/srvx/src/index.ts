@@ -1,5 +1,5 @@
 import { apply } from "@universal-middleware/srvx";
-import { middlewaresAfterRoutes, middlewaresBeforeRoutes } from "vike/__internal";
+import { middlewaresProxy_handlers, middlewaresProxy_middlewares } from "vike/__internal";
 
 export * from "@universal-middleware/srvx";
 
@@ -10,5 +10,5 @@ type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
  * not-found page.
  */
 export default function vike(middlewares: EnhancedMiddlewareSrvx[] = []) {
-  return apply([...middlewares, middlewaresBeforeRoutes, middlewaresAfterRoutes]);
+  return apply([...middlewares, middlewaresProxy_middlewares, middlewaresProxy_handlers]);
 }

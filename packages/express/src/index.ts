@@ -1,6 +1,6 @@
 import { type App, apply, connectToWeb, createHandler } from "@universal-middleware/express";
 import type { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from "express";
-import { middlewaresAfterRoutes, middlewaresBeforeRoutes } from "vike/__internal";
+import { middlewaresProxy_handlers, middlewaresProxy_middlewares } from "vike/__internal";
 
 export * from "@universal-middleware/express";
 
@@ -41,7 +41,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] 
 
   appendPagesOnFirstRequest(app);
 
-  return apply(app, [...middlewares, middlewaresBeforeRoutes]);
+  return apply(app, [...middlewares, middlewaresProxy_middlewares]);
 }
 
 function assertNoRouteBefore(app: App) {
@@ -92,7 +92,7 @@ function appendPagesOnFirstRequest(app: App) {
   const handle = app.handle;
   app.handle = function (this: App, ...args: Parameters<App["handle"]>) {
     app.handle = handle;
-    const pages = createHandler(() => middlewaresAfterRoutes)();
+    const pages = createHandler(() => middlewaresProxy_handlers)();
     app.use((req: ExpressRequest, res: ExpressResponse, next: NextFunction) =>
       pages(req as Parameters<typeof pages>[0], res, next),
     );
