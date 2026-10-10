@@ -1,3 +1,4 @@
+import { enhance } from "@universal-middleware/core";
 import { Elysia } from "elysia";
 import { serve } from "srvx";
 import { describe, expect, it, vi } from "vitest";
@@ -60,6 +61,16 @@ describe("@vikejs/elysia", () => {
 
     const response = await send(app, "/api/me", { headers: { "x-user": "alice" } });
     expect(await response.json()).toEqual({ user: "alice" });
+  });
+
+  it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
+    const app = new Elysia();
+    vike(app, [
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(app, "/", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("user alice");
   });
 
   it("answers with a +middleware that is a handler where the app has no route", async () => {

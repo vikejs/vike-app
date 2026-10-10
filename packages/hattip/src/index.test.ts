@@ -1,4 +1,5 @@
 import { createRouter } from "@hattip/router";
+import { enhance } from "@universal-middleware/core";
 import { describe, expect, it, vi } from "vitest";
 
 // Stands for the two halves of Vike's +middleware that vike(app) applies: the ones that aren't handlers, looked up upon each request, and the handlers with the pages. Here: the user's
@@ -66,6 +67,16 @@ describe("@vikejs/hattip", () => {
 
     const response = await send(router.buildHandler(), "/api/me", { headers: { "x-user": "alice" } });
     expect(await response?.json()).toEqual({ user: "alice" });
+  });
+
+  it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
+    const router = createRouter();
+    vike(router, [
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(router.buildHandler(), "/", { headers: { "x-user": "alice" } });
+    expect(await response?.text()).toBe("user alice");
   });
 
   it("answers with a +middleware that is a handler where the app has no route", async () => {

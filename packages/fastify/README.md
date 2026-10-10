@@ -37,6 +37,8 @@ You can pass additional [universal middlewares](https://github.com/magne4000/uni
 await vike(app, [myMiddleware()])
 ```
 
+They run after the `+middleware` that aren't handlers, and before the `+middleware` that are handlers and Vike's pages; one with a negative `order` runs before the `+middleware`. Register your app's own middlewares, such as a session, before `vike(app)`, so they run before everything.
+
 ## Manual path
 
 For more control, do by hand what `vike(app)` does: install the `+middleware` first and Vike's pages last, with `globalContext.middlewares`.

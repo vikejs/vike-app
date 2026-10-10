@@ -22,7 +22,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareHono[] = [
   renderPagesOnNotFound(app);
   guardNotFound(app);
 
-  return apply(app, [...middlewares, middlewaresProxy_middlewares]);
+  return apply(app, [middlewaresProxy_middlewares, ...middlewares]);
 }
 
 function assertNoRouteBefore(app: App) {

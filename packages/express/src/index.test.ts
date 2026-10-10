@@ -101,6 +101,16 @@ describe("vike(app)", () => {
     expect(await response.json()).toEqual({ user: "alice" });
   });
 
+  it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
+    const app = express();
+    vike(app, [
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(app, "/", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("user alice");
+  });
+
   it("answers with a +middleware that is a handler where the app has no route", async () => {
     const app = express();
     vike(app);
@@ -221,25 +231,6 @@ describe("vike(app)", () => {
     const response = await send(app, "/about", { method: "DELETE" });
     expect(response.status).toBe(404);
     expect(await response.text()).toBe("Not Found");
-  });
-
-  it("places the extra middlewares before the +middleware", async () => {
-    const order: string[] = [];
-    const app = express();
-    vike(app, [
-      enhance(
-        (_request, context) => {
-          order.push("extra");
-          return context;
-        },
-        { name: "extra" },
-      ),
-    ]);
-    app.get("/", (_req, res) => {
-      res.send(order.join());
-    });
-
-    expect(await (await send(app, "/")).text()).toBe("extra");
   });
 
   describe("a route registered before vike(app)", () => {

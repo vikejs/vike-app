@@ -16,6 +16,7 @@ feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's o
 - Hono: the pages are `app.notFound()`; the adapter throws at the first request if `app.notFound()` was called after `vike(app)`, or if the app was mounted with `app.route()`, which doesn't carry `app.notFound()` over (call `vike(app)` on the parent).
 - Express and Hono: `vike(app)` throws if a route was registered before it (the `+middleware` would not run for it).
 - Calling `vike(app)` twice on the same app throws.
+- The middlewares passed as the second argument, `vike(app, [myMiddleware()])`, now run after the `+middleware` that aren't handlers (one with a negative `order` runs before them). Register your app's own middlewares, such as a session, before `vike(app)`.
 
 For more control, apply `globalContext.middlewares` yourself: `const globalContext = await getGlobalContext()` (from `vike/server`), `assert(!globalContext.isClientSide)` (from `node:assert`), `const { middlewares } = globalContext`, then `apply(app, middlewares.filter((m) => !m.isHandler))` first and `apply(app, middlewares.filter((m) => m.isHandler))` last (on Fastify and Elysia, one call: `apply(app, middlewares)`). The list holds every `+middleware` and, as its last element, Vike's pages and not-found page; each element has an `isHandler` property. The list is read when your server starts: restart your server after changing a `+middleware`.
 

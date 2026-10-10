@@ -63,6 +63,15 @@ describe("@vikejs/srvx", () => {
     expect(await response.text()).toBe("alice");
   });
 
+  it("runs the +middleware before the middlewares passed to vike(), which see its context", async () => {
+    const fetch = vike([
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(fetch, "/", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("user alice");
+  });
+
   it("answers with a +middleware that is a handler where no route in middlewares matches", async () => {
     expect(await (await send(vike(), "/x")).text()).toBe("handler");
   });

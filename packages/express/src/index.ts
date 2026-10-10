@@ -41,7 +41,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] 
 
   appendPagesOnFirstRequest(app);
 
-  return apply(app, [...middlewares, middlewaresProxy_middlewares]);
+  return apply(app, [middlewaresProxy_middlewares, ...middlewares]);
 }
 
 function assertNoRouteBefore(app: App) {

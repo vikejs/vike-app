@@ -29,6 +29,8 @@ const me = enhance((request, context) => Response.json(context.user), { name: 'm
 serve({ fetch: vike([me]) })
 ```
 
+A universal middleware in the array that isn't a handler runs after the `+middleware` that aren't handlers too, unless it has a negative `order`.
+
 ## Manual path
 
 `vike()` is the same as applying the `+middleware`, then Vike's pages last, with `globalContext.middlewares`:

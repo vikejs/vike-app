@@ -1,3 +1,4 @@
+import { enhance } from "@universal-middleware/core";
 import { createApp, createRouter, eventHandler, readBody, toWebHandler } from "h3";
 import { describe, expect, it, vi } from "vitest";
 
@@ -66,6 +67,16 @@ describe("@vikejs/h3", () => {
 
     const response = await send(app, "/api/me", { headers: { "x-user": "alice" } });
     expect(await response.json()).toEqual({ user: "alice" });
+  });
+
+  it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
+    const app = createApp();
+    vike(app, [
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(app, "/", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("user alice");
   });
 
   it("answers 200 JSON from a route that returns an object, with the response step of the +middleware applied", async () => {
