@@ -1,26 +1,60 @@
-import { enhance } from "@universal-middleware/core";
+import { enhance, type RuntimeAdapterTarget, type UniversalMiddleware } from "@universal-middleware/core";
 import { Elysia } from "elysia";
 import { serve } from "srvx";
 import { describe, expect, it, vi } from "vitest";
 
-// Stands for the two halves of Vike's +middleware that vike(app) applies: the ones that aren't handlers, looked up upon each request, and the handlers with the pages. Here: the user's
-// +middleware puts the `x-user` header in the context, after `x-delay` milliseconds, and with an `x-step` header it also adds a response step that sets `x-step` on the response
+// Stands for the two halves of Vike's +middleware that vike(app) applies: the ones that aren't handlers, looked up upon each request and run in one loop with the app's middlewares, and the handlers with the pages. Here: the user's
+// +middleware puts the `x-user` header in the context, after `x-delay` milliseconds, with an `x-step` header it also adds a response step that sets `x-step` on the response,
+// and with an `x-answer` header it answers itself
 vi.mock("vike/__internal", async () => {
-  const { enhance } = await import("@universal-middleware/core");
+  const { enhance, getUniversal, getUniversalProp, ...core } = await import("@universal-middleware/core");
+  const plusMiddleware = enhance(
+    async (request: Request, context: Universal.Context) => {
+      await new Promise((resolve) => setTimeout(resolve, Number(request.headers.get("x-delay") ?? 0)));
+      // Like the real one, it adds to the context and returns nothing, a response step or a Response
+      Object.assign(context, { user: request.headers.get("x-user") });
+      if (request.headers.has("x-answer")) return new Response("+middleware");
+      if (!request.headers.has("x-step")) return;
+      return (response: Response) => {
+        response.headers.set("x-step", "applied");
+        return response;
+      };
+    },
+    { name: "stub:plus" },
+  );
+  // Like @universal-middleware/core's isHandler(), which its 0.6.0 doesn't export
+  const isHandler = (middleware: UniversalMiddleware) => {
+    const order = getUniversalProp(middleware, core.orderSymbol);
+    return typeof order === "number" ? order === 0 : Boolean(getUniversalProp(middleware, core.pathSymbol));
+  };
   return {
-    middlewaresProxy_middlewares: enhance(
-      async (request: Request, context: Universal.Context) => {
-        await new Promise((resolve) => setTimeout(resolve, Number(request.headers.get("x-delay") ?? 0)));
-        // Like the real one, it adds to the context and returns nothing or a response step
-        Object.assign(context, { user: request.headers.get("x-user") });
-        if (!request.headers.has("x-step")) return;
-        return (response: Response) => {
-          response.headers.set("x-step", "applied");
-          return response;
-        };
-      },
-      { name: "stub:before" },
-    ),
+    // Like the real one: one loop over the +middleware and the app's middlewares that aren't handlers, by order, the
+    // +middleware first at equal order. The first Response answers, the app's middlewares after it still run, and the
+    // response steps apply to the answer, or to the route or page. Then the app's handlers.
+    middlewaresProxy_middlewares: (middlewares: UniversalMiddleware[] = []) => {
+      const nonHandlers = [plusMiddleware, ...middlewares.filter((middleware) => !isHandler(middleware))].sort(
+        (a, b) => getUniversalProp(a, core.orderSymbol, 0) - getUniversalProp(b, core.orderSymbol, 0),
+      );
+      const loop = enhance(
+        async (request: Request, context: Universal.Context, runtime: RuntimeAdapterTarget<unknown>) => {
+          let answer: Response | undefined;
+          const steps: ((response: Response) => Response | undefined | Promise<Response | undefined>)[] = [];
+          for (const middleware of nonHandlers) {
+            const result = await getUniversal(middleware)(request, context, runtime);
+            if (result instanceof Response) answer ??= result;
+            else if (typeof result === "function") steps.push(result);
+          }
+          const applySteps = async (response: Response) => {
+            for (const step of steps) response = (await step(response)) ?? response;
+            return response;
+          };
+          if (answer) return applySteps(answer);
+          if (steps.length > 0) return applySteps;
+        },
+        { name: "stub:before" },
+      );
+      return [loop, ...middlewares.filter(isHandler)];
+    },
     // Stands for the +middleware that are handlers (here /x), then Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
     middlewaresProxy_handlers: enhance(
       async (request: Request) => {
@@ -71,6 +105,21 @@ describe("@vikejs/elysia", () => {
 
     const response = await send(app, "/", { headers: { "x-user": "alice" } });
     expect(await response.text()).toBe("user alice");
+  });
+
+  it("applies the response step of a middleware passed to vike(app) to a response the +middleware returns", async () => {
+    const appHeader = enhance(
+      () => (response: Response) => {
+        response.headers.set("x-app", "applied");
+        return response;
+      },
+      { name: "app-header" },
+    );
+    const app = new Elysia();
+    vike(app, [appHeader]);
+
+    const response = await send(app, "/about", { headers: { "x-answer": "1" } });
+    expect([await response.text(), response.headers.get("x-app")]).toEqual(["+middleware", "applied"]);
   });
 
   it("answers with a +middleware that is a handler where the app has no route", async () => {

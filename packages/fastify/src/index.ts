@@ -17,5 +17,5 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] 
     throw new Error("[@vikejs/fastify] vike(app) was already called on this app: call it once.");
   }
   installed.add(app);
-  return apply(app, [middlewaresProxy_middlewares, ...middlewares, middlewaresProxy_handlers]);
+  return apply(app, [...middlewaresProxy_middlewares(middlewares), middlewaresProxy_handlers]);
 }

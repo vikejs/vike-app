@@ -29,7 +29,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = [])
     await onRequest?.(event);
   };
 
-  return apply(app, [middlewaresProxy_middlewares, ...middlewares]);
+  return apply(app, middlewaresProxy_middlewares(middlewares));
 }
 
 function assertNoRouteBefore(app: App) {

@@ -24,5 +24,5 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareHattip[] =
     return buildHandler.call(this);
   };
 
-  return apply(app, [middlewaresProxy_middlewares, ...middlewares]);
+  return apply(app, middlewaresProxy_middlewares(middlewares));
 }

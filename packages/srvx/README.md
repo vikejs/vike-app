@@ -29,7 +29,7 @@ const me = enhance((request, context) => Response.json(context.user), { name: 'm
 serve({ fetch: vike([me]) })
 ```
 
-A universal middleware in the array that isn't a handler runs after the `+middleware` that aren't handlers too, unless it has a negative `order`.
+A universal middleware in the array that isn't a handler runs with the `+middleware` that aren't handlers, by `order`, the `+middleware` first at equal `order`.
 
 ## Manual path
 
