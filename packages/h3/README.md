@@ -29,6 +29,8 @@ export default app
 
 The pages are appended when the first request arrives. A route registered after the first request sits behind the pages, so register every route before serving requests. A catch-all handler registered after `vike(app)` hides the pages.
 
+`vike(app)` throws if a router, a nested app or a lazy handler was mounted before it, because the `+middleware` would not run for its routes (`app.use(router)`, `app.use('/api', router.handler)`). A middleware such as `app.use(eventHandler(() => {}))` is fine. A handler mounted on a path, `app.use('/health', eventHandler(() => 'ok'))`, looks like a middleware to h3, so it isn't caught: register it after `vike(app)`. To answer a route before the `+middleware` on purpose, use the manual path.
+
 Calling `vike(app)` twice on the same app throws.
 
 You can pass additional [universal middlewares](https://github.com/magne4000/universal-middleware) as the second argument:

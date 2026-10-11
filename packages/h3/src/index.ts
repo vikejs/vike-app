@@ -17,6 +17,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = [])
   if (installed.has(app)) {
     throw new Error("[@vikejs/h3] vike(app) was already called on this app: call it once.");
   }
+  assertNoRouteBefore(app);
   installed.add(app);
 
   const onRequest = app.options.onRequest;
@@ -29,4 +30,15 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = [])
   };
 
   return apply(app, [middlewaresProxy_middlewares, ...middlewares]);
+}
+
+function assertNoRouteBefore(app: App) {
+  // h3 marks routers, nested apps and lazy handlers with `__resolve__`, and not a plain middleware
+  const layer = app.stack.find((layer) => layer.handler.__resolve__);
+  if (layer) {
+    throw new Error(
+      `[@vikejs/h3] Call vike(app) before registering the app's routes: a router, a nested app or a lazy handler was mounted on ${layer.route} first, so the +middleware would not run for its routes. ` +
+        `To answer a route before the +middleware, install them yourself: apply(app, middlewares.filter((m) => !m.isHandler)) and apply(app, middlewares.filter((m) => m.isHandler)), with the middlewares of (await getGlobalContext()).middlewares.`,
+    );
+  }
 }

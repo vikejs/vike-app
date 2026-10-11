@@ -14,7 +14,7 @@ feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's o
 
 - Express and H3: the pages are appended when the first request arrives; a route registered after the first request sits behind the pages.
 - Hono: the pages are `app.notFound()`; the adapter throws at the first request if `app.notFound()` was called after `vike(app)`, or if the app was mounted with `app.route()`, which doesn't carry `app.notFound()` over (call `vike(app)` on the parent).
-- Express and Hono: `vike(app)` throws if a route was registered before it (the `+middleware` would not run for it).
+- Express and Hono: `vike(app)` throws if a route was registered before it (the `+middleware` would not run for it). H3: it throws if a router, a nested app or a lazy handler was mounted before it.
 - Calling `vike(app)` twice on the same app throws.
 - The middlewares passed as the second argument, `vike(app, [myMiddleware()])`, now run after the `+middleware` that aren't handlers (one with a negative `order` runs before them). Register your app's own middlewares, such as a session, before `vike(app)`.
 

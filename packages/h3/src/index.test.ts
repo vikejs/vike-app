@@ -1,5 +1,5 @@
 import { enhance } from "@universal-middleware/core";
-import { createApp, createRouter, eventHandler, readBody, toWebHandler } from "h3";
+import { createApp, createRouter, eventHandler, lazyEventHandler, readBody, toWebHandler } from "h3";
 import { describe, expect, it, vi } from "vitest";
 
 // Stands for the two halves of Vike's +middleware that vike(app) applies: the ones that aren't handlers, looked up upon each request, and the handlers with the pages. Here: the user's
@@ -221,6 +221,50 @@ describe("@vikejs/h3", () => {
     await send(app, "/about");
     await send(app, "/about");
     expect(onRequest).toHaveBeenCalledTimes(2);
+  });
+
+  describe("a route registered before vike(app)", () => {
+    const router = () =>
+      createRouter().get(
+        "/health",
+        eventHandler(() => "ok"),
+      );
+
+    it.each([
+      ["a router", (app: ReturnType<typeof createApp>) => app.use(router())],
+      ["a router on a path", (app: ReturnType<typeof createApp>) => app.use("/api", router().handler)],
+      ["a nested app", (app: ReturnType<typeof createApp>) => app.use("/sub", createApp().handler)],
+      [
+        "a lazy handler",
+        (app: ReturnType<typeof createApp>) =>
+          app.use(
+            "/lazy",
+            lazyEventHandler(() => eventHandler(() => "ok")),
+          ),
+      ],
+    ])("throws for %s", (_name, register) => {
+      const app = createApp();
+      register(app);
+      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+    });
+
+    it("names the path the router was mounted on", () => {
+      const app = createApp();
+      app.use("/api", router().handler);
+      expect(() => vike(app)).toThrow(/mounted on \/api first/);
+    });
+
+    it.each([
+      ["a middleware", (app: ReturnType<typeof createApp>) => app.use(eventHandler(() => {}))],
+      [
+        "a middleware passed to apply()",
+        (app: ReturnType<typeof createApp>) => apply(app, [enhance(() => {}, { name: "session" })]),
+      ],
+    ])("does not throw for %s", (_name, register) => {
+      const app = createApp();
+      register(app);
+      expect(() => vike(app)).not.toThrow();
+    });
   });
 
   it("throws when vike(app) is called twice on the same app", () => {
