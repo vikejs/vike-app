@@ -15,6 +15,18 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareElysia[] =
   if (installed.has(app)) {
     throw new Error("[@vikejs/elysia] vike(app) was already called on this app: call it once.");
   }
+  assertNoRouteBefore(app);
   installed.add(app);
   return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
+}
+
+// Elysia hooks registered later don't reach the routes registered before them
+function assertNoRouteBefore(app: App) {
+  const route = app.routes.find(({ method, path }) => method !== "OPTIONS" && !path.includes("*"));
+  if (route) {
+    throw new Error(
+      `[@vikejs/elysia] Call vike(app) before registering the app's routes: ${route.method} ${route.path} was registered first, so the +middleware would not run for it. ` +
+        `To answer a route before the +middleware, install them yourself: register the route before apply(app, middlewares), with the middlewares of (await getGlobalContext()).middlewares.`,
+    );
+  }
 }

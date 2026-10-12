@@ -27,6 +27,8 @@ app.listen(3000)
 
 The pages are one catch-all route, so Elysia matches the routes you register after `vike(app)` first.
 
+`vike(app)` throws if a route was registered before it, also through a plugin, because the `+middleware` would not run for that route: any route other than `OPTIONS` and wildcard paths (`app.onRequest()`, a plugin without routes and `app.get('/static/*', …)` are fine). To answer a route before the `+middleware` on purpose, use the manual path.
+
 Calling `vike(app)` twice on the same app throws.
 
 You can pass additional [universal middlewares](https://github.com/magne4000/universal-middleware) as the second argument:

@@ -230,6 +230,36 @@ describe("@vikejs/elysia", () => {
     expect(await response.text()).toBe("Not Found");
   });
 
+  describe("a route registered before vike(app)", () => {
+    it.each([
+      ["GET", (app: Elysia) => app.get("/health", () => "ok")],
+      ["POST", (app: Elysia) => app.post("/submit", () => "ok")],
+      ["a route of a plugin", (app: Elysia) => app.use(new Elysia().get("/plugin", () => "ok"))],
+    ])("throws for %s", (_name, register) => {
+      const app = new Elysia();
+      register(app);
+      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+    });
+
+    it("names the route", () => {
+      const app = new Elysia();
+      app.get("/health", () => "ok");
+      expect(() => vike(app)).toThrow(/GET \/health was registered first/);
+    });
+
+    it.each([
+      ["a request hook", (app: Elysia) => app.onRequest(() => {})],
+      ["a plugin without routes", (app: Elysia) => app.use(new Elysia().onRequest(() => {}))],
+      ["a preflight OPTIONS route", (app: Elysia) => app.options("/health", () => new Response(null, { status: 204 }))],
+      ["a static file route on a wildcard path", (app: Elysia) => app.get("/static/*", () => "file")],
+      ["app.all on a wildcard path", (app: Elysia) => app.all("/*", () => "all")],
+    ])("does not throw for %s", (_name, register) => {
+      const app = new Elysia();
+      register(app);
+      expect(() => vike(app)).not.toThrow();
+    });
+  });
+
   it("throws when vike(app) is called twice on the same app", () => {
     const app = new Elysia();
     vike(app);
