@@ -1,6 +1,6 @@
 import { type App, apply, createHandler } from "@universal-middleware/hono";
 import type { MiddlewareHandler } from "hono";
-import { middlewaresProxy_handlers, middlewaresProxy_nonHandlers } from "vike/__internal";
+import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
 
 export * from "@universal-middleware/hono";
 
@@ -22,7 +22,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareHono[] = [
   renderPagesOnNotFound(app, middlewares);
   guardNotFound(app);
 
-  return apply(app, [middlewaresProxy_nonHandlers(middlewares)]);
+  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
 }
 
 function assertNoRouteBefore(app: App) {
@@ -44,7 +44,7 @@ function isAppRoute({ method, path }: { method: string; path: string }) {
 const fallThrough = new WeakSet<object>();
 
 function renderPagesOnNotFound(app: App, middlewares: EnhancedMiddlewareHono[]) {
-  const pages = createHandler(() => middlewaresProxy_handlers(middlewares))();
+  const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
   app.notFound(async (c) => {
     // Hono calls this both when the routes pass the request on and when a route calls `c.notFound()`, which is a 404,
     // including a route registered before vike(app), which ends the request before the guard

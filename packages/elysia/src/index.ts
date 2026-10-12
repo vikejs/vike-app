@@ -1,5 +1,5 @@
 import { type App, apply } from "@universal-middleware/elysia";
-import { middlewaresProxy_handlers, middlewaresProxy_nonHandlers } from "vike/__internal";
+import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
 
 export * from "@universal-middleware/elysia";
 
@@ -16,5 +16,5 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareElysia[] =
     throw new Error("[@vikejs/elysia] vike(app) was already called on this app: call it once.");
   }
   installed.add(app);
-  return apply(app, [middlewaresProxy_nonHandlers(middlewares), middlewaresProxy_handlers(middlewares)]);
+  return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
 }

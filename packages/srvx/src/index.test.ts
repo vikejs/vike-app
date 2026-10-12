@@ -29,7 +29,7 @@ vi.mock("vike/__internal", async () => {
     // Like the real one: one loop over the +middleware and the app's middlewares that aren't handlers, by order, the
     // +middleware first at equal order. The first Response answers, the app's middlewares after it still run, and the
     // response steps apply to the answer, or to the route or page.
-    middlewaresProxy_nonHandlers: (middlewares: UniversalMiddleware[] = []) => {
+    middlewaresPipe_nonHandlers: (middlewares: UniversalMiddleware[] = []) => {
       const nonHandlers = [plusMiddleware, ...middlewares.filter((middleware) => !isHandler(middleware))].sort(
         (a, b) => getUniversalProp(a, core.orderSymbol, 0) - getUniversalProp(b, core.orderSymbol, 0),
       );
@@ -53,7 +53,7 @@ vi.mock("vike/__internal", async () => {
       );
     },
     // The app's handlers, then stands for the +middleware that are handlers (here /x) and Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
-    middlewaresProxy_handlers: (middlewares: UniversalMiddleware[] = []) => {
+    middlewaresPipe_handlers: (middlewares: UniversalMiddleware[] = []) => {
       const handlersApp = core.pipeRoute(middlewares.filter(isHandler));
       return enhance(
         async (request: Request, context: Universal.Context, runtime: RuntimeAdapterTarget<unknown>) => {
