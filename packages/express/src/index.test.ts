@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { enhance, type RuntimeAdapterTarget, type UniversalMiddleware } from "@universal-middleware/core";
+import connect from "connect";
 import cors from "cors";
 import express from "express";
 import { describe, expect, it, vi } from "vitest";
@@ -330,6 +331,11 @@ describe("vike(app)", () => {
       ["a wildcard route", (app: express.Express) => app.all("/{*any}", (_req, _res, next) => next())],
       ["a logger", (app: express.Express) => app.use((_req, _res, next) => next())],
       ["a mounted router without routes", (app: express.Express) => app.use("/sub", express.Router())],
+      // Like Vite's dev middleware: a Connect app, whose layers keep their mount path in `route`
+      [
+        "a Connect app",
+        (app: express.Express) => app.use(connect().use("/__open-in-editor", (_req, _res, next) => next())),
+      ],
     ])("does not throw for %s", (_name, register) => {
       const app = express();
       register(app);

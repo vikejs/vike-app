@@ -24,10 +24,12 @@
     "@universal-middleware/express": "^0.5.1"
   },
   "devDependencies": {
+    "@types/connect": "^3.4.38",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^20.19.43",
     "@universal-middleware/core": "^0.6.0",
+    "connect": "^3.7.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "tsdown": "^0.21.10",

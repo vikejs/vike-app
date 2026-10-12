@@ -23,7 +23,8 @@ export function toFetchHandler(app: Parameters<typeof connectToWeb>[0]): (reques
 
 type EnhancedMiddlewareExpress = Parameters<typeof apply>[1][number];
 
-type Layer = { route?: { path: unknown; methods: Record<string, boolean> }; handle?: { stack?: Layer[] } };
+// A Connect app mounted with app.use(), like Vite's dev middleware, also has a stack: its layers keep their mount path in `route`
+type Layer = { route?: string | { path: unknown; methods: Record<string, boolean> }; handle?: { stack?: Layer[] } };
 
 const installed = new WeakSet<App>();
 
@@ -54,11 +55,11 @@ function assertNoRouteBefore(app: App) {
   }
 }
 
-// Only routes have `layer.route`, also inside mounted routers; `express.static` and `cors()` are middleware.
+// Only routes have a `layer.route` object, also inside mounted routers; `express.static` and `cors()` are middleware.
 // `app.all()` is every method: Express 4 sets `_all`, Express 5 lists them all.
 function findRouteBefore(stack: Layer[]): { methods: string; path: string } | undefined {
   for (const layer of stack) {
-    if (layer.route) {
+    if (typeof layer.route === "object") {
       const { path, methods } = layer.route;
       const names = Object.keys(methods).filter((method) => methods[method]);
       if (names.every((method) => method === "options")) continue;
