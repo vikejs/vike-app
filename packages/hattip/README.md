@@ -27,6 +27,8 @@ export default router
 
 The pages are added when the router builds its handler (`router.buildHandler()`), after all the routes you registered.
 
+A route registered before `vike(app)` skips the `+middleware`. It looks like a middleware to HatTip, so it isn't caught: register your routes after `vike(app)`.
+
 Calling `vike(app)` twice on the same router throws.
 
 You can pass additional [universal middlewares](https://github.com/magne4000/universal-middleware) as the second argument:
