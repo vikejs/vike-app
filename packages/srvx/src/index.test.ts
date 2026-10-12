@@ -28,12 +28,12 @@ vi.mock("vike/__internal", async () => {
   return {
     // Like the real one: one loop over the +middleware and the app's middlewares that aren't handlers, by order, the
     // +middleware first at equal order. The first Response answers, the app's middlewares after it still run, and the
-    // response steps apply to the answer, or to the route or page. Then the app's handlers.
-    middlewaresProxy_middlewares: (middlewares: UniversalMiddleware[] = []) => {
+    // response steps apply to the answer, or to the route or page.
+    middlewaresProxy_nonHandlers: (middlewares: UniversalMiddleware[] = []) => {
       const nonHandlers = [plusMiddleware, ...middlewares.filter((middleware) => !isHandler(middleware))].sort(
         (a, b) => getUniversalProp(a, core.orderSymbol, 0) - getUniversalProp(b, core.orderSymbol, 0),
       );
-      const loop = enhance(
+      return enhance(
         async (request: Request, context: Universal.Context, runtime: RuntimeAdapterTarget<unknown>) => {
           let answer: Response | undefined;
           const steps: ((response: Response) => Response | undefined | Promise<Response | undefined>)[] = [];
@@ -51,23 +51,27 @@ vi.mock("vike/__internal", async () => {
         },
         { name: "stub:before" },
       );
-      return [loop, ...middlewares.filter(isHandler)];
     },
-    // Stands for the +middleware that are handlers (here /x), then Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
-    middlewaresProxy_handlers: enhance(
-      async (request: Request) => {
-        const { pathname } = new URL(request.url);
-        if (!["GET", "POST", "PUT", "PATCH", "HEAD", "OPTIONS"].includes(request.method)) {
-          return new Response("Not Found", { status: 404 });
-        }
-        return new Response(request.method === "GET" && pathname === "/x" ? "handler" : `page ${pathname}`);
-      },
-      {
-        name: "stub:after",
-        method: ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "CONNECT", "TRACE"],
-        path: "/**",
-      },
-    ),
+    // The app's handlers, then stands for the +middleware that are handlers (here /x) and Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
+    middlewaresProxy_handlers: (middlewares: UniversalMiddleware[] = []) => {
+      const handlersApp = core.pipeRoute(middlewares.filter(isHandler));
+      return enhance(
+        async (request: Request, context: Universal.Context, runtime: RuntimeAdapterTarget<unknown>) => {
+          const answer = await handlersApp(request, context, runtime);
+          if (answer) return answer;
+          const { pathname } = new URL(request.url);
+          if (!["GET", "POST", "PUT", "PATCH", "HEAD", "OPTIONS"].includes(request.method)) {
+            return new Response("Not Found", { status: 404 });
+          }
+          return new Response(request.method === "GET" && pathname === "/x" ? "handler" : `page ${pathname}`);
+        },
+        {
+          name: "stub:after",
+          method: ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "CONNECT", "TRACE"],
+          path: "/**",
+        },
+      );
+    },
   };
 });
 

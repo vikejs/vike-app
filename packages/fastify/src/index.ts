@@ -1,5 +1,5 @@
 import { type App, apply } from "@universal-middleware/fastify";
-import { middlewaresProxy_handlers, middlewaresProxy_middlewares } from "vike/__internal";
+import { middlewaresProxy_handlers, middlewaresProxy_nonHandlers } from "vike/__internal";
 
 export * from "@universal-middleware/fastify";
 export { toFetchHandler } from "srvx/node";
@@ -17,5 +17,5 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] 
     throw new Error("[@vikejs/fastify] vike(app) was already called on this app: call it once.");
   }
   installed.add(app);
-  return apply(app, [...middlewaresProxy_middlewares(middlewares), middlewaresProxy_handlers]);
+  return apply(app, [middlewaresProxy_nonHandlers(middlewares), middlewaresProxy_handlers(middlewares)]);
 }

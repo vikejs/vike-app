@@ -35,7 +35,7 @@ You can pass additional [universal middlewares](https://github.com/magne4000/uni
 vike(app, [myMiddleware()])
 ```
 
-They run with the `+middleware` that aren't handlers, by `order`, the `+middleware` first at equal `order`, and before the `+middleware` that are handlers and Vike's pages. A response step one of them adds, such as `compress()`'s, also applies to a response a `+middleware` returns. Register your app's own middlewares, such as a session, before `vike(app)`, so they run before everything.
+The ones that aren't handlers run with the `+middleware` that aren't handlers, by `order`, the `+middleware` first at equal `order`. A handler among them runs after your routes, like a `+middleware` handler, and answers before a `+middleware` handler on the same path. A response step one of them adds, such as `compress()`'s, also applies to a response a `+middleware` returns. Register your app's own middlewares, such as a session, before `vike(app)`, so they run before everything.
 
 ## Manual path
 
