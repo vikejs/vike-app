@@ -4,7 +4,6 @@
 "@vikejs/fastify": minor
 "@vikejs/elysia": minor
 "@vikejs/h3": minor
-"@vikejs/hattip": minor
 "@vikejs/srvx": minor
 ---
 
@@ -13,7 +12,6 @@ feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's o
 `vike(app)` now installs the `+middleware` that aren't handlers right away (looked up on every request, so a `+middleware` you add, remove or edit in `vike dev` needs no restart) and arranges for the `+middleware` that are handlers (`order: 0`, or a `path` and no `order`, such as Telefunc's `/_telefunc`) and Vike's pages and not-found page to run after the routes the app registers later, so a route the app registers after `vike(app)` on the same path answers instead of them. Routes the app registers after `vike(app)` see what the `+middleware` put in the context and keep their precedence over pages. The signature is unchanged.
 
 - Express and H3: the pages are appended when the first request arrives; a route registered after the first request sits behind the pages.
-- HatTip: the pages are added when the router builds its handler (`router.buildHandler()`). A route registered before `vike(app)` skips the `+middleware` and isn't detected.
 - Hono: the pages are `app.notFound()`; the adapter throws at the first request if `app.notFound()` was called after `vike(app)`, or if the app was mounted with `app.route()`, which doesn't carry `app.notFound()` over (call `vike(app)` on the parent).
 - Express, Hono and Elysia: `vike(app)` throws if a route was registered before it (the `+middleware` would not run for it). H3: it throws if a router, a nested app or a lazy handler was mounted before it.
 - Calling `vike(app)` twice on the same app throws.

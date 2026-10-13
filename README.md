@@ -13,7 +13,6 @@ Docs: see [vike.dev/server](https://vike.dev/server)
 | [`@vikejs/fastify`](packages/fastify) | [Fastify](https://fastify.dev) |
 | [`@vikejs/h3`](packages/h3) | [H3](https://h3.unjs.io) |
 | [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) |
-| [`@vikejs/hattip`](packages/hattip) | [HatTip](https://github.com/hattipjs/hattip) |
 | [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) |
 
 ## Overview
