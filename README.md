@@ -2,6 +2,8 @@
 
 Server adapters integrating [Vike](https://vike.dev) with various server frameworks.
 
+Docs: see [vike.dev/server](https://vike.dev/server)
+
 ## Packages
 
 | Package | Framework |
