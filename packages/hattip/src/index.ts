@@ -17,12 +17,16 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareHattip[] =
   }
   installed.add(app);
 
+  appendPagesOnBuildHandler(app, middlewares);
+
+  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
+}
+
+function appendPagesOnBuildHandler(app: App, middlewares: EnhancedMiddlewareHattip[]) {
   const buildHandler = app.buildHandler;
   app.buildHandler = function (this: App) {
     app.buildHandler = buildHandler;
     apply(app, [middlewaresPipe_handlers(middlewares)]);
     return buildHandler.call(this);
   };
-
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
 }

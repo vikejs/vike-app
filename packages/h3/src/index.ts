@@ -20,14 +20,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = [])
   assertNoRouteBefore(app);
   installed.add(app);
 
-  const onRequest = app.options.onRequest;
-  app.options.onRequest = async (event) => {
-    app.options.onRequest = onRequest;
-    // Not apply(app, [middlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
-    const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
-    app.use(eventHandler((event) => pages(event)));
-    await onRequest?.(event);
-  };
+  appendPagesOnFirstRequest(app, middlewares);
 
   return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
 }
@@ -41,4 +34,15 @@ function assertNoRouteBefore(app: App) {
         `To answer a route before the +middleware, install them yourself: apply(app, middlewares.filter((m) => !m.isHandler)) and apply(app, middlewares.filter((m) => m.isHandler)), with the middlewares of (await getGlobalContext()).middlewares.`,
     );
   }
+}
+
+function appendPagesOnFirstRequest(app: App, middlewares: EnhancedMiddlewareH3[]) {
+  const onRequest = app.options.onRequest;
+  app.options.onRequest = async (event) => {
+    app.options.onRequest = onRequest;
+    // Not apply(app, [middlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
+    const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
+    app.use(eventHandler((event) => pages(event)));
+    await onRequest?.(event);
+  };
 }
