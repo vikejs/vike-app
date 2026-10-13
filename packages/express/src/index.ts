@@ -63,7 +63,7 @@ function findRouteBefore(stack: Layer[]): { methods: string; path: string } | un
       const { path, methods } = layer.route;
       const names = Object.keys(methods).filter((method) => methods[method]);
       if (names.every((method) => method === "options")) continue;
-      if (isWildcard(path)) continue;
+      if (typeof path === "string" && path.includes("*")) continue;
       return {
         methods: names.includes("_all") || names.length > 5 ? "ALL" : names.join(",").toUpperCase(),
         path: String(path),
@@ -74,10 +74,6 @@ function findRouteBefore(stack: Layer[]): { methods: string; path: string } | un
       if (route) return route;
     }
   }
-}
-
-function isWildcard(path: unknown) {
-  return typeof path === "string" && path.includes("*");
 }
 
 // Express 4 keeps the router in `_router`, created on first use; Express 5 in `router`
