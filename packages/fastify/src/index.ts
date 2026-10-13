@@ -16,6 +16,7 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] 
   if (installed.has(app)) {
     throw new Error("[@vikejs/fastify] vike(app) was already called on this app: call it once.");
   }
+  // TODO/ai: add a comment explaining why this works (does it respect the sandwich approach? If yes, why does it?) — make sure every adapter gets a little explanation of how it works somewhere in the code
   installed.add(app);
   return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
 }
