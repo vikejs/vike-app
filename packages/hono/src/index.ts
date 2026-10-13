@@ -11,8 +11,11 @@ const errMsgExplanation = "which breaks vike(app) (because vike(app) uses app.no
 const errMsgIntro = '[@vikejs/hono] Wrong installation:'
 
 /**
- * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page as `app.notFound()`, so that the routes
- * the app registers after `vike(app)` keep their precedence over pages.
+ * Installs Vike's list of +middleware in the right order:
+ * - Server middlewares that aren't handlers first, before the app's routes
+ * - Handlers last, after the app's routes
+ *
+ * It also installs Vike's handler that renders pages.
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
   if (installed.has(app)) {
