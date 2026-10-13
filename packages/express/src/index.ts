@@ -46,9 +46,10 @@ function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
   assertNoRouteBefore(app);
   installed.add(app);
 
-  appendPagesOnFirstRequest(app, middlewares);
+  appendHandlersOnFirstRequest(app, middlewares);
 
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  return apply(app, [nonHandlersPipe]);
 }
 
 function assertNoRouteBefore(app: App) {
@@ -91,13 +92,13 @@ function routerStack(app: App): Layer[] | undefined {
 }
 
 // The app is complete at the first request: a route registered after it sits behind the handlers
-function appendPagesOnFirstRequest(app: App, middlewares: EnhancedMiddlewareExpress[]) {
+function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareExpress[]) {
   const handle = app.handle;
   app.handle = function (this: App, ...args: Parameters<App["handle"]>) {
     app.handle = handle;
-    const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
+    const handlersPipe = createHandler(() => middlewaresPipe_handlers(middlewares))();
     app.use((req: ExpressRequest, res: ExpressResponse, next: NextFunction) =>
-      pages(req as Parameters<typeof pages>[0], res, next),
+      handlersPipe(req as Parameters<typeof handlersPipe>[0], res, next),
     );
     return handle.apply(this, args);
   };

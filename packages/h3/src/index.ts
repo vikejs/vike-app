@@ -25,9 +25,10 @@ function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
   assertNoRouteBefore(app);
   installed.add(app);
 
-  appendPagesOnFirstRequest(app, middlewares);
+  appendHandlersOnFirstRequest(app, middlewares);
 
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  return apply(app, [nonHandlersPipe]);
 }
 
 function assertNoRouteBefore(app: App) {
@@ -41,13 +42,13 @@ function assertNoRouteBefore(app: App) {
 }
 
 // The app is complete at the first request: a route registered after it sits behind the handlers
-function appendPagesOnFirstRequest(app: App, middlewares: EnhancedMiddlewareH3[]) {
+function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareH3[]) {
   const onRequest = app.options.onRequest;
   app.options.onRequest = async (event) => {
     app.options.onRequest = onRequest;
     // Not apply(app, [middlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
-    const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
-    app.use(eventHandler((event) => pages(event)));
+    const handlersPipe = createHandler(() => middlewaresPipe_handlers(middlewares))();
+    app.use(eventHandler((event) => handlersPipe(event)));
     await onRequest?.(event);
   };
 }

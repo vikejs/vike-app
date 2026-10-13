@@ -23,17 +23,19 @@ function vike(app: App, middlewares: EnhancedMiddlewareHattip[] = []) {
   }
   installed.add(app);
 
-  appendPagesOnBuildHandler(app, middlewares);
+  appendHandlersOnBuildHandler(app, middlewares);
 
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  return apply(app, [nonHandlersPipe]);
 }
 
 // The router builds its handler once the app is complete
-function appendPagesOnBuildHandler(app: App, middlewares: EnhancedMiddlewareHattip[]) {
+function appendHandlersOnBuildHandler(app: App, middlewares: EnhancedMiddlewareHattip[]) {
   const buildHandler = app.buildHandler;
   app.buildHandler = function (this: App) {
     app.buildHandler = buildHandler;
-    apply(app, [middlewaresPipe_handlers(middlewares)]);
+    const handlersPipe = middlewaresPipe_handlers(middlewares);
+    apply(app, [handlersPipe]);
     return buildHandler.call(this);
   };
 }

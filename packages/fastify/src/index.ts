@@ -25,5 +25,7 @@ function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
   // TODO/ai: add a comment explaining why this works (does it respect the sandwich approach? If yes, why does it?) — make sure every adapter gets a little explanation of how it works somewhere in the code
   installed.add(app);
   // The handlers are one catch-all route: Fastify matches the routes the app registers after vike(app) first
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  return apply(app, [nonHandlersPipe, handlersPipe]);
 }

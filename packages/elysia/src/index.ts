@@ -24,7 +24,9 @@ function vike(app: App, middlewares: EnhancedMiddlewareElysia[] = []) {
   assertNoRouteBefore(app);
   installed.add(app);
   // The handlers are one catch-all route: Elysia matches the routes the app registers after vike(app) first
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  return apply(app, [nonHandlersPipe, handlersPipe]);
 }
 
 // Elysia hooks registered later don't reach the routes registered before them

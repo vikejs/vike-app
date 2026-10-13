@@ -63,7 +63,7 @@ function renderHandlersOnNotFound(app: App, middlewares: EnhancedMiddlewareHono[
 function guardAppNotFound(app: App) {
   let notFoundReplaced = false;
   const setNotFound = app.notFound;
-  // Watches the app.notFound() calls made from now on, so it runs after renderPagesOnNotFound()
+  // Watches the app.notFound() calls made from now on, so it runs after renderHandlersOnNotFound()
   app.notFound = (handler) => {
     notFoundReplaced = true;
     return setNotFound(handler);

@@ -14,5 +14,7 @@ type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
  * It also runs Vike's handler that renders pages.
  */
 function vike(middlewares: EnhancedMiddlewareSrvx[] = []) {
-  return apply([middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  return apply([nonHandlersPipe, handlersPipe]);
 }
