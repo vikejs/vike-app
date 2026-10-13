@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@universal-middleware/h3": "^0.5.2"
+    "@universal-middleware/h3": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
