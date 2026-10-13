@@ -30,9 +30,11 @@ const installed = new WeakSet<App>();
 const errMsgIntro = "[@vikejs/express] Wrong installation:";
 
 /**
- * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page when the first request arrives, so that the
- * routes the app registers after `vike(app)` keep their precedence over pages. A route registered after the first request
- * sits behind the pages.
+ * Installs Vike's list of +middleware in the right order:
+ * - Server middlewares that aren't handlers first, before the app's routes
+ * - Handlers last, after the app's routes
+ *
+ * It also installs Vike's handler that renders pages.
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
   if (installed.has(app)) {
@@ -86,6 +88,7 @@ function routerStack(app: App): Layer[] | undefined {
   return router?.stack;
 }
 
+// The app is complete at the first request: a route registered after it sits behind the handlers
 function appendPagesOnFirstRequest(app: App, middlewares: EnhancedMiddlewareExpress[]) {
   const handle = app.handle;
   app.handle = function (this: App, ...args: Parameters<App["handle"]>) {

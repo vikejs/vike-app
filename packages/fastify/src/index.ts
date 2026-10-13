@@ -10,8 +10,11 @@ const installed = new WeakSet<App>();
 const errMsgIntro = "[@vikejs/fastify] Wrong installation:";
 
 /**
- * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page as one catch-all route: Fastify matches the
- * routes the app registers after `vike(app)` first.
+ * Installs Vike's list of +middleware in the right order:
+ * - Server middlewares that aren't handlers first, before the app's routes
+ * - Handlers last, after the app's routes
+ *
+ * It also installs Vike's handler that renders pages.
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
   if (installed.has(app)) {
@@ -20,5 +23,6 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] 
   }
   // TODO/ai: add a comment explaining why this works (does it respect the sandwich approach? If yes, why does it?) — make sure every adapter gets a little explanation of how it works somewhere in the code
   installed.add(app);
+  // The handlers are one catch-all route: Fastify matches the routes the app registers after vike(app) first
   return apply(app, [middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
 }

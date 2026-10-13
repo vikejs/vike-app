@@ -6,8 +6,11 @@ export * from "@universal-middleware/srvx";
 type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
 
 /**
- * The `fetch` handler of the server: the `+middleware` and the middlewares in `middlewares` that aren't handlers, by `order` (the `+middleware` first at
- * equal `order`), then the routes in `middlewares`, then the `+middleware` that are handlers with Vike's pages and not-found page.
+ * Returns the server's `fetch` handler, which runs Vike's list of +middleware in the right order:
+ * - Server middlewares that aren't handlers first, before the routes in `middlewares`
+ * - Handlers last, after the routes in `middlewares`
+ *
+ * It also runs Vike's handler that renders pages.
  */
 export default function vike(middlewares: EnhancedMiddlewareSrvx[] = []) {
   return apply([middlewaresPipe_nonHandlers(middlewares), middlewaresPipe_handlers(middlewares)]);
