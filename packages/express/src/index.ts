@@ -1,8 +1,10 @@
+export default vike;
+export * from "@universal-middleware/express";
+export { toFetchHandler };
+
 import { type App, apply, connectToWeb, createHandler } from "@universal-middleware/express";
 import type { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from "express";
 import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
-export * from "@universal-middleware/express";
 
 /**
  * Convert an Express app into a web `fetch` handler.
@@ -16,7 +18,7 @@ export * from "@universal-middleware/express";
  * (`@vikejs/express` used to re-export srvx's `toFetchHandler`, but that one
  * deadlocks and doesn't work on Deno/Bun — see srvx#132.)
  */
-export function toFetchHandler(app: Parameters<typeof connectToWeb>[0]): (request: Request) => Promise<Response> {
+function toFetchHandler(app: Parameters<typeof connectToWeb>[0]): (request: Request) => Promise<Response> {
   const handler = connectToWeb(app);
   return async (request) => (await handler(request)) ?? new Response(null, { status: 404 });
 }
@@ -36,7 +38,7 @@ const errMsgIntro = "[@vikejs/express] Wrong installation:";
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);

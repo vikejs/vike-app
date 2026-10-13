@@ -1,8 +1,9 @@
+export default vike;
+export * from "@universal-middleware/h3";
+
 import { type App, apply, createHandler } from "@universal-middleware/h3";
 import { eventHandler } from "h3";
 import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
-export * from "@universal-middleware/h3";
 
 type EnhancedMiddlewareH3 = Parameters<typeof apply>[1][number];
 
@@ -16,7 +17,7 @@ const errMsgIntro = "[@vikejs/h3] Wrong installation:";
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);

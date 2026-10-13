@@ -1,7 +1,8 @@
+export default vike;
+export * from "@universal-middleware/hattip";
+
 import { type App, apply } from "@universal-middleware/hattip";
 import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
-export * from "@universal-middleware/hattip";
 
 type EnhancedMiddlewareHattip = Parameters<typeof apply>[1][number];
 
@@ -15,7 +16,7 @@ const errMsgIntro = "[@vikejs/hattip] Wrong installation:";
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareHattip[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareHattip[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);

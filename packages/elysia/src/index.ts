@@ -1,7 +1,8 @@
+export default vike;
+export * from "@universal-middleware/elysia";
+
 import { type App, apply } from "@universal-middleware/elysia";
 import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
-export * from "@universal-middleware/elysia";
 
 type EnhancedMiddlewareElysia = Parameters<typeof apply>[1][number];
 
@@ -15,7 +16,7 @@ const errMsgIntro = "[@vikejs/elysia] Wrong installation:";
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareElysia[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareElysia[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);

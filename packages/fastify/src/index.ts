@@ -1,8 +1,9 @@
-import { type App, apply } from "@universal-middleware/fastify";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
+export default vike;
 export * from "@universal-middleware/fastify";
 export { toFetchHandler } from "srvx/node";
+
+import { type App, apply } from "@universal-middleware/fastify";
+import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareFastify = Parameters<typeof apply>[1][number];
 
@@ -16,7 +17,7 @@ const errMsgIntro = "[@vikejs/fastify] Wrong installation:";
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);
