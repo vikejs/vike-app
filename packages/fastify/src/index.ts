@@ -22,9 +22,10 @@ function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);
   }
-  // TODO/ai: add a comment explaining why this works (does it respect the sandwich approach? If yes, why does it?) — make sure every adapter gets a little explanation of how it works somewhere in the code
   installed.add(app);
-  // The handlers are one catch-all route: Fastify matches the routes the app registers after vike(app) first
+  // The +middleware that aren't handlers are a preHandler hook, which Fastify runs before every route, and the
+  // handlers are one `/*` route, which Fastify's router matches last: the app's routes come in between, whatever
+  // order they're registered in
   const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
   const handlersPipe = middlewaresPipe_handlers(middlewares);
   return apply(app, [nonHandlersPipe, handlersPipe]);

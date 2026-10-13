@@ -15,6 +15,7 @@ type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
  */
 function vike(middlewares: EnhancedMiddlewareSrvx[] = []) {
   const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  // Tries the routes in `middlewares` before Vike's handlers
   const handlersPipe = middlewaresPipe_handlers(middlewares);
   return apply([nonHandlersPipe, handlersPipe]);
 }
