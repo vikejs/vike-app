@@ -167,6 +167,17 @@ describe("vike(app)", () => {
     expect(await (await send(app, "/about")).text()).toBe("app");
   });
 
+  it("answers with the app's route registered after an await, when a page has the same path", async () => {
+    const app = express();
+    vike(app);
+    await new Promise((resolve) => setTimeout(resolve));
+    app.get("/about", (_req, res) => {
+      res.send("app");
+    });
+
+    expect(await (await send(app, "/about")).text()).toBe("app");
+  });
+
   it("hands a JSON body to a route registered after vike(app)", async () => {
     const app = express();
     vike(app);
