@@ -1,8 +1,9 @@
+export default vike
+export * from "@universal-middleware/hono";
+
 import { type App, apply, createHandler } from "@universal-middleware/hono";
 import type { MiddlewareHandler } from "hono";
 import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
-
-export * from "@universal-middleware/hono";
 
 type EnhancedMiddlewareHono = Parameters<typeof apply>[1][number];
 
@@ -17,7 +18,7 @@ const errMsgIntro = '[@vikejs/hono] Wrong installation:'
  *
  * It also installs Vike's handler that renders pages.
  */
-export default function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
+function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
   if (installed.has(app)) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);
