@@ -27,6 +27,7 @@ type EnhancedMiddlewareExpress = Parameters<typeof apply>[1][number];
 type Layer = { route?: string | { path: unknown; methods: Record<string, boolean> }; handle?: { stack?: Layer[] } };
 
 const installed = new WeakSet<App>();
+const errMsgIntro = "[@vikejs/express] Wrong installation:";
 
 /**
  * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page when the first request arrives, so that the
@@ -35,7 +36,8 @@ const installed = new WeakSet<App>();
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
   if (installed.has(app)) {
-    throw new Error("[@vikejs/express] vike(app) was already called on this app: call it once.");
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
   }
   assertNoRouteBefore(app);
   installed.add(app);
@@ -48,9 +50,9 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareExpress[] 
 function assertNoRouteBefore(app: App) {
   const route = findRouteBefore(routerStack(app) ?? []);
   if (route) {
-    throw new Error(
-      `[@vikejs/express] Wrong installation: ${route.methods} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
-    );
+    const errMsg =
+      `${errMsgIntro} ${route.methods} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server` as const;
+    throw new Error(errMsg);
   }
 }
 

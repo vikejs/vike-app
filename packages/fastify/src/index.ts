@@ -7,6 +7,7 @@ export { toFetchHandler } from "srvx/node";
 type EnhancedMiddlewareFastify = Parameters<typeof apply>[1][number];
 
 const installed = new WeakSet<App>();
+const errMsgIntro = "[@vikejs/fastify] Wrong installation:";
 
 /**
  * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page as one catch-all route: Fastify matches the
@@ -14,7 +15,8 @@ const installed = new WeakSet<App>();
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
   if (installed.has(app)) {
-    throw new Error("[@vikejs/fastify] vike(app) was already called on this app: call it once.");
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
   }
   // TODO/ai: add a comment explaining why this works (does it respect the sandwich approach? If yes, why does it?) — make sure every adapter gets a little explanation of how it works somewhere in the code
   installed.add(app);

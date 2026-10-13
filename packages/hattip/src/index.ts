@@ -6,6 +6,7 @@ export * from "@universal-middleware/hattip";
 type EnhancedMiddlewareHattip = Parameters<typeof apply>[1][number];
 
 const installed = new WeakSet<App>();
+const errMsgIntro = "[@vikejs/hattip] Wrong installation:";
 
 /**
  * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page when the router builds its handler, so
@@ -13,7 +14,8 @@ const installed = new WeakSet<App>();
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareHattip[] = []) {
   if (installed.has(app)) {
-    throw new Error("[@vikejs/hattip] vike(app) was already called on this app: call it once.");
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
   }
   installed.add(app);
 

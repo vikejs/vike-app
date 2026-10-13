@@ -7,6 +7,7 @@ export * from "@universal-middleware/h3";
 type EnhancedMiddlewareH3 = Parameters<typeof apply>[1][number];
 
 const installed = new WeakSet<App>();
+const errMsgIntro = "[@vikejs/h3] Wrong installation:";
 
 /**
  * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page when the first request arrives, so that the
@@ -15,7 +16,8 @@ const installed = new WeakSet<App>();
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
   if (installed.has(app)) {
-    throw new Error("[@vikejs/h3] vike(app) was already called on this app: call it once.");
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
   }
   assertNoRouteBefore(app);
   installed.add(app);
@@ -29,9 +31,9 @@ function assertNoRouteBefore(app: App) {
   // h3 marks routers, nested apps and lazy handlers with `__resolve__`, and not a plain middleware
   const layer = app.stack.find((layer) => layer.handler.__resolve__);
   if (layer) {
-    throw new Error(
-      `[@vikejs/h3] Wrong installation: a router, a nested app or a lazy handler was mounted on ${layer.route} before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
-    );
+    const errMsg =
+      `${errMsgIntro} a router, a nested app or a lazy handler was mounted on ${layer.route} before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server` as const;
+    throw new Error(errMsg);
   }
 }
 

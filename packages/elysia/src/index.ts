@@ -6,6 +6,7 @@ export * from "@universal-middleware/elysia";
 type EnhancedMiddlewareElysia = Parameters<typeof apply>[1][number];
 
 const installed = new WeakSet<App>();
+const errMsgIntro = "[@vikejs/elysia] Wrong installation:";
 
 /**
  * Install the `+middleware` that aren't handlers right away, and the handlers with Vike's pages and not-found page as one catch-all route: Elysia matches the
@@ -13,7 +14,8 @@ const installed = new WeakSet<App>();
  */
 export default function vike(app: App, middlewares: EnhancedMiddlewareElysia[] = []) {
   if (installed.has(app)) {
-    throw new Error("[@vikejs/elysia] vike(app) was already called on this app: call it once.");
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
   }
   assertNoRouteBefore(app);
   installed.add(app);
@@ -24,8 +26,8 @@ export default function vike(app: App, middlewares: EnhancedMiddlewareElysia[] =
 function assertNoRouteBefore(app: App) {
   const route = app.routes.find(({ method, path }) => method !== "OPTIONS" && !path.includes("*"));
   if (route) {
-    throw new Error(
-      `[@vikejs/elysia] Wrong installation: ${route.method} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
-    );
+    const errMsg =
+      `${errMsgIntro} ${route.method} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server` as const;
+    throw new Error(errMsg);
   }
 }
