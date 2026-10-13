@@ -26,10 +26,11 @@ function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
   assertNoRouteBefore(app);
   installed.add(app);
 
-  renderPagesOnNotFound(app, middlewares);
-  guardNotFound(app);
+  renderHandlersOnNotFound(app, middlewares);
+  guardAppNotFound(app);
 
-  return apply(app, [middlewaresPipe_nonHandlers(middlewares)]);
+  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares)
+  return apply(app, [nonHandlersPipe]);
 }
 
 function assertNoRouteBefore(app: App) {
@@ -48,18 +49,18 @@ function isAppRoute({ method, path }: { method: string; path: string }) {
 // The contexts that went through the guard and whose routes haven't called `c.notFound()` since
 const fallThrough = new WeakSet<object>();
 
-function renderPagesOnNotFound(app: App, middlewares: EnhancedMiddlewareHono[]) {
-  const pages = createHandler(() => middlewaresPipe_handlers(middlewares))();
+function renderHandlersOnNotFound(app: App, middlewares: EnhancedMiddlewareHono[]) {
+  const handlersPipe = createHandler(() => middlewaresPipe_handlers(middlewares))();
   app.notFound(async (c) => {
     // Hono calls this both when the routes pass the request on and when a route calls `c.notFound()`, which is a 404,
     // including a route registered before vike(app), which ends the request before the guard
     if (!fallThrough.has(c)) return c.text("404 Not Found", 404);
-    return ((await pages(c, async () => {})) as Response | undefined) ?? c.text("404 Not Found", 404);
+    return ((await handlersPipe(c, async () => {})) as Response | undefined) ?? c.text("404 Not Found", 404);
   });
 }
 
 // Runs before the app's routes on every request
-function guardNotFound(app: App) {
+function guardAppNotFound(app: App) {
   let notFoundReplaced = false;
   const setNotFound = app.notFound;
   // Watches the app.notFound() calls made from now on, so it runs after renderPagesOnNotFound()
