@@ -30,8 +30,7 @@ function assertNoRouteBefore(app: App) {
   const layer = app.stack.find((layer) => layer.handler.__resolve__);
   if (layer) {
     throw new Error(
-      `[@vikejs/h3] Call vike(app) before registering the app's routes: a router, a nested app or a lazy handler was mounted on ${layer.route} first, so the +middleware would not run for its routes. ` +
-        `To answer a route before the +middleware, install them yourself: apply(app, middlewares.filter((m) => !m.isHandler)) and apply(app, middlewares.filter((m) => m.isHandler)), with the middlewares of (await getGlobalContext()).middlewares.`,
+      `[@vikejs/h3] Wrong installation: a router, a nested app or a lazy handler was mounted on ${layer.route} before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
     );
   }
 }

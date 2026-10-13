@@ -238,13 +238,13 @@ describe("@vikejs/h3", () => {
     ])("throws for %s", (_name, register) => {
       const app = createApp();
       register(app);
-      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+      expect(() => vike(app)).toThrow(/Wrong installation: .+ before vike\(app\)/);
     });
 
     it("names the path the router was mounted on", () => {
       const app = createApp();
       app.use("/api", router().handler);
-      expect(() => vike(app)).toThrow(/mounted on \/api first/);
+      expect(() => vike(app)).toThrow(/mounted on \/api before vike\(app\)/);
     });
 
     it.each([

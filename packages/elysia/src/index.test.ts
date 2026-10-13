@@ -166,13 +166,13 @@ describe("@vikejs/elysia", () => {
     ])("throws for %s", (_name, register) => {
       const app = new Elysia();
       register(app);
-      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+      expect(() => vike(app)).toThrow(/Wrong installation: .+ before vike\(app\)/);
     });
 
     it("names the route", () => {
       const app = new Elysia();
       app.get("/health", () => "ok");
-      expect(() => vike(app)).toThrow(/GET \/health was registered first/);
+      expect(() => vike(app)).toThrow(/GET \/health was registered before vike\(app\)/);
     });
 
     it.each([

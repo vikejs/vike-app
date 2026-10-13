@@ -49,8 +49,7 @@ function assertNoRouteBefore(app: App) {
   const route = findRouteBefore(routerStack(app) ?? []);
   if (route) {
     throw new Error(
-      `[@vikejs/express] Call vike(app) before registering the app's routes: ${route.methods} ${route.path} was registered first, so the +middleware would not run for it. ` +
-        `To answer a route before the +middleware, install them yourself: apply(app, middlewares.filter((m) => !m.isHandler)) and apply(app, middlewares.filter((m) => m.isHandler)), with the middlewares of (await getGlobalContext()).middlewares.`,
+      `[@vikejs/express] Wrong installation: ${route.methods} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
     );
   }
 }

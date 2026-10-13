@@ -25,8 +25,7 @@ function assertNoRouteBefore(app: App) {
   const route = app.routes.find(({ method, path }) => method !== "OPTIONS" && !path.includes("*"));
   if (route) {
     throw new Error(
-      `[@vikejs/elysia] Call vike(app) before registering the app's routes: ${route.method} ${route.path} was registered first, so the +middleware would not run for it. ` +
-        `To answer a route before the +middleware, install them yourself: register the route before apply(app, middlewares), with the middlewares of (await getGlobalContext()).middlewares.`,
+      `[@vikejs/elysia] Wrong installation: ${route.method} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server`,
     );
   }
 }

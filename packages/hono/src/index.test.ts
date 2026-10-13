@@ -258,7 +258,7 @@ describe("@vikejs/hono", () => {
     ])("throws for a %s route", (_method, register) => {
       const app = new Hono();
       register(app);
-      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+      expect(() => vike(app)).toThrow(/Wrong installation: .+ before vike\(app\)/);
     });
 
     it.each([

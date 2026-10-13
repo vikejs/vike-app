@@ -242,13 +242,13 @@ describe("vike(app)", () => {
     ])("throws for %s", (_name, register) => {
       const app = express();
       register(app);
-      expect(() => vike(app)).toThrow(/Call vike\(app\) before registering the app's routes/);
+      expect(() => vike(app)).toThrow(/Wrong installation: .+ before vike\(app\)/);
     });
 
     it("names app.all as ALL", () => {
       const app = express();
       app.all("/health", (_req, res) => void res.send("ok"));
-      expect(() => vike(app)).toThrow(/ALL \/health was registered first/);
+      expect(() => vike(app)).toThrow(/ALL \/health was registered before vike\(app\)/);
     });
 
     it.each([
