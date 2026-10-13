@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
-    "@universal-middleware/core": "^0.6.1",
+    "@universal-middleware/core": "^0.6.2",
     "h3": "^1.15.11",
     "tsdown": "^0.21.10",
     "typescript": "^5.9.3",
