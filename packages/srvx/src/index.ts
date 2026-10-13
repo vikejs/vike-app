@@ -2,7 +2,7 @@ export default vike;
 export * from "@universal-middleware/srvx";
 
 import { apply } from "@universal-middleware/srvx";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
 
@@ -14,8 +14,8 @@ type EnhancedMiddlewareSrvx = Parameters<typeof apply>[0][number];
  * It also runs Vike's handler that renders pages.
  */
 function vike(middlewares: EnhancedMiddlewareSrvx[] = []) {
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   // Tries the routes in `middlewares` before Vike's handlers
-  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  const handlersPipe = getMiddlewaresPipe_handlers(middlewares);
   return apply([nonHandlersPipe, handlersPipe]);
 }

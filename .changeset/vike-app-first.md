@@ -22,4 +22,4 @@ feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's o
 
 For more control, apply `globalContext.middlewares` yourself, see [vike.dev/middleware#manual-integration](https://vike.dev/middleware#manual-integration).
 
-Requires Vike 0.4.268 or later, which ships `globalContext.middlewares` and, in `vike/__internal`, the `middlewaresPipe_nonHandlers` and `middlewaresPipe_handlers` that `vike(app)` applies. With an older Vike, the adapters fail when they are imported.
+Requires Vike 0.4.268 or later, which ships `globalContext.middlewares` and, in `vike/__internal`, the `getMiddlewaresPipe_nonHandlers` and `getMiddlewaresPipe_handlers` that `vike(app)` applies. With an older Vike, the adapters fail when they are imported.

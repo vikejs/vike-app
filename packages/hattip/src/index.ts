@@ -2,7 +2,7 @@ export default vike;
 export * from "@universal-middleware/hattip";
 
 import { type App, apply } from "@universal-middleware/hattip";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareHattip = Parameters<typeof apply>[1][number];
 
@@ -25,7 +25,7 @@ function vike(app: App, middlewares: EnhancedMiddlewareHattip[] = []) {
 
   appendHandlersOnBuildHandler(app, middlewares);
 
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
 }
 
@@ -34,7 +34,7 @@ function appendHandlersOnBuildHandler(app: App, middlewares: EnhancedMiddlewareH
   const buildHandler = app.buildHandler;
   app.buildHandler = function (this: App) {
     app.buildHandler = buildHandler;
-    const handlersPipe = middlewaresPipe_handlers(middlewares);
+    const handlersPipe = getMiddlewaresPipe_handlers(middlewares);
     apply(app, [handlersPipe]);
     return buildHandler.call(this);
   };

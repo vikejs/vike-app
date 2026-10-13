@@ -41,7 +41,7 @@ const isHandler = (middleware: UniversalMiddleware) => {
 // Like the real one: one loop over the +middleware and the app's middlewares that aren't handlers, by order, the
 // +middleware first at equal order. The first Response answers, the app's middlewares after it still run, and the
 // response steps apply to the answer, or to the route or page.
-export const middlewaresPipe_nonHandlers = (middlewares: UniversalMiddleware[] = []) => {
+export const getMiddlewaresPipe_nonHandlers = (middlewares: UniversalMiddleware[] = []) => {
   const nonHandlers = [plusMiddleware, ...middlewares.filter((middleware) => !isHandler(middleware))].sort(
     (a, b) => getUniversalProp(a, orderSymbol, 0) - getUniversalProp(b, orderSymbol, 0),
   );
@@ -66,7 +66,7 @@ export const middlewaresPipe_nonHandlers = (middlewares: UniversalMiddleware[] =
 };
 
 // The app's handlers, then stands for the +middleware that are handlers (here /x) and Vike's pages: like the real one, it declares every method and answers 404 for a method the pages don't declare
-export const middlewaresPipe_handlers = (middlewares: UniversalMiddleware[] = []) => {
+export const getMiddlewaresPipe_handlers = (middlewares: UniversalMiddleware[] = []) => {
   const handlersApp = pipeRoute(middlewares.filter(isHandler));
   return enhance(
     async (request: Request, context: Universal.Context, runtime: RuntimeAdapterTarget<unknown>) => {

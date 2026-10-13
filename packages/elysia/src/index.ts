@@ -2,7 +2,7 @@ export default vike;
 export * from "@universal-middleware/elysia";
 
 import { type App, apply } from "@universal-middleware/elysia";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareElysia = Parameters<typeof apply>[1][number];
 
@@ -24,8 +24,8 @@ function vike(app: App, middlewares: EnhancedMiddlewareElysia[] = []) {
   assertNoRouteBefore(app);
   installed.add(app);
   // The handlers are one catch-all route: Elysia matches the routes the app registers after vike(app) first
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
-  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
+  const handlersPipe = getMiddlewaresPipe_handlers(middlewares);
   return apply(app, [nonHandlersPipe, handlersPipe]);
 }
 

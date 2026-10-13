@@ -3,7 +3,7 @@ export * from "@universal-middleware/h3";
 
 import { type App, apply, createHandler } from "@universal-middleware/h3";
 import { eventHandler } from "h3";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareH3 = Parameters<typeof apply>[1][number];
 
@@ -27,7 +27,7 @@ function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
 
   appendHandlersOnFirstRequest(app, middlewares);
 
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
 }
 
@@ -46,8 +46,8 @@ function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareH
   const onRequest = app.options.onRequest;
   app.options.onRequest = async (event) => {
     app.options.onRequest = onRequest;
-    // Not apply(app, [middlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
-    const handlersPipe = createHandler(() => middlewaresPipe_handlers(middlewares))();
+    // Not apply(app, [getMiddlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
+    const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
     app.use(eventHandler((event) => handlersPipe(event)));
     await onRequest?.(event);
   };

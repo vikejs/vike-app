@@ -3,7 +3,7 @@ export * from "@universal-middleware/fastify";
 export { toFetchHandler } from "srvx/node";
 
 import { type App, apply } from "@universal-middleware/fastify";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareFastify = Parameters<typeof apply>[1][number];
 
@@ -26,7 +26,7 @@ function vike(app: App, middlewares: EnhancedMiddlewareFastify[] = []) {
   // The +middleware that aren't handlers are a preHandler hook, which Fastify runs before every route, and the
   // handlers are one `/*` route, which Fastify's router matches last: the app's routes come in between, whatever
   // order they're registered in
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
-  const handlersPipe = middlewaresPipe_handlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
+  const handlersPipe = getMiddlewaresPipe_handlers(middlewares);
   return apply(app, [nonHandlersPipe, handlersPipe]);
 }

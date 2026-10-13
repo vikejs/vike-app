@@ -4,7 +4,7 @@ export { toFetchHandler };
 
 import { type App, apply, connectToWeb, createHandler } from "@universal-middleware/express";
 import type { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from "express";
-import { middlewaresPipe_handlers, middlewaresPipe_nonHandlers } from "vike/__internal";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 /**
  * Convert an Express app into a web `fetch` handler.
@@ -48,7 +48,7 @@ function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
 
   appendHandlersOnFirstRequest(app, middlewares);
 
-  const nonHandlersPipe = middlewaresPipe_nonHandlers(middlewares);
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
 }
 
@@ -96,7 +96,7 @@ function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareE
   const handle = app.handle;
   app.handle = function (this: App, ...args: Parameters<App["handle"]>) {
     app.handle = handle;
-    const handlersPipe = createHandler(() => middlewaresPipe_handlers(middlewares))();
+    const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
     app.use((req: ExpressRequest, res: ExpressResponse, next: NextFunction) =>
       handlersPipe(req as Parameters<typeof handlersPipe>[0], res, next),
     );
