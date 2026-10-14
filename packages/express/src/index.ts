@@ -3,7 +3,6 @@ export * from "@universal-middleware/express";
 export { toFetchHandler };
 
 import { type App, apply, connectToWeb, createHandler } from "@universal-middleware/express";
-import type { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from "express";
 import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 /**
@@ -28,6 +27,13 @@ type EnhancedMiddlewareExpress = Parameters<typeof apply>[1][number];
 // A Connect app mounted with app.use(), like Vite's dev middleware, also has a stack: its layers keep their mount path in `route`
 type Layer = { route?: string | { path: unknown; methods: Record<string, boolean> }; handle?: { stack?: Layer[] } };
 
+// The Express internals vike(app) reads, which `App` doesn't declare
+type ExpressApp = App & {
+  handle(...args: unknown[]): unknown;
+  router?: { stack: Layer[] };
+  _router?: { stack: Layer[] };
+};
+
 const installed = new WeakSet<App>();
 const errMsgIntro = "[@vikejs/express] Wrong installation:";
 
@@ -43,16 +49,16 @@ function vike(app: App, middlewares: EnhancedMiddlewareExpress[] = []) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);
   }
-  assertNoRouteBefore(app);
+  assertNoRouteBefore(app as ExpressApp);
   installed.add(app);
 
-  appendHandlersOnFirstRequest(app, middlewares);
+  appendHandlersOnFirstRequest(app as ExpressApp, middlewares);
 
   const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
 }
 
-function assertNoRouteBefore(app: App) {
+function assertNoRouteBefore(app: ExpressApp) {
   const route = findRouteBefore(routerStack(app) ?? []);
   if (route) {
     const errMsg =
@@ -83,23 +89,19 @@ function findRouteBefore(stack: Layer[]): { methods: string; path: string } | un
 }
 
 // Express 4 keeps the router in `_router`, created on first use; Express 5 in `router`
-function routerStack(app: App): Layer[] | undefined {
+function routerStack(app: ExpressApp): Layer[] | undefined {
   const express4 = "del" in app;
-  const router = express4
-    ? (app as { _router?: { stack: Layer[] } })._router
-    : (app as { router: { stack: Layer[] } }).router;
+  const router = express4 ? app._router : app.router;
   return router?.stack;
 }
 
 // The app is complete at the first request: a route registered after it sits behind the handlers
-function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareExpress[]) {
+function appendHandlersOnFirstRequest(app: ExpressApp, middlewares: EnhancedMiddlewareExpress[]) {
   const handle = app.handle;
-  app.handle = function (this: App, ...args: Parameters<App["handle"]>) {
+  app.handle = function (this: ExpressApp, ...args: unknown[]) {
     app.handle = handle;
     const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
-    app.use((req: ExpressRequest, res: ExpressResponse, next: NextFunction) =>
-      handlersPipe(req as Parameters<typeof handlersPipe>[0], res, next),
-    );
+    app.use(handlersPipe);
     return handle.apply(this, args);
   };
 }
