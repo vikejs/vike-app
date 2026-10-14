@@ -23,9 +23,11 @@ function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
   }
   installed.add(app);
 
-  // h3 matches the most specific route first, so the app's routes answer before this catch-all, whenever they're registered
+  // h3 picks the most specific path and falls back to GET for HEAD, so an app's route on any path but /** answers before the pages, whenever it's registered
   const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
-  app.all("/**", handlersPipe);
+  for (const method of ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "CONNECT", "TRACE", "QUERY"] as const) {
+    app.on(method, "/**", handlersPipe);
+  }
 
   const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
