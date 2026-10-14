@@ -1,0 +1,9 @@
+{
+  "name": "test-app",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@universal-middleware/core": "^0.7.1",
+    "vike": "0.4.267-commit-e667e7c"
+  }
+}

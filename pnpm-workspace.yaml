@@ -1,5 +1,6 @@
 packages:
   - packages/*
+  - test/app
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:

@@ -1,9 +1,14 @@
+import { fileURLToPath } from "node:url";
 import { enhance } from "@universal-middleware/core";
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("vike/__internal", () => import("../../../test/vikeInternalStub.js"));
-
+import { createDevMiddleware } from "vike/server";
+import { afterAll, describe, expect, it } from "vitest";
 import vike, { apply } from "./index.js";
+
+// Vike's global context comes from this app: the tests drive its +middleware with request headers
+const { viteServer } = await createDevMiddleware({
+  root: fileURLToPath(new URL("../../../test/app", import.meta.url)),
+});
+afterAll(() => viteServer.close());
 
 describe("@vikejs/srvx", () => {
   it("vike is a function", () => {
@@ -107,7 +112,7 @@ describe("@vikejs/srvx", () => {
   });
 
   it("renders a page where no route matches", async () => {
-    expect(await (await send(vike(), "/about")).text()).toBe("page /about");
+    expect(await (await send(vike(), "/about")).text()).toContain("page /about");
   });
 
   it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
