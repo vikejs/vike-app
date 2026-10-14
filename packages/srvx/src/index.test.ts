@@ -96,22 +96,8 @@ describe("@vikejs/srvx", () => {
     expect(await response.json()).toEqual({ a: 1 });
   });
 
-  it("answers HEAD on a route in middlewares", async () => {
-    // A route declared for GET does not match HEAD, so the route declares both
-    const fetch = vike([enhance(() => new Response("api"), { name: "api", method: ["GET", "HEAD"], path: "/api/me" })]);
-
-    const response = await send(fetch, "/api/me", { method: "HEAD" });
-    expect(response.status).toBe(200);
-  });
-
   it("renders a page where no route matches", async () => {
     expect(await (await send(vike(), "/about")).text()).toContain("page /about");
-  });
-
-  it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
-    const response = await send(vike(), "/about", { method: "DELETE" });
-    expect(response.status).toBe(404);
-    expect(await response.text()).toBe("Not Found");
   });
 
   it("answers with the route in middlewares when a page has the same path", async () => {

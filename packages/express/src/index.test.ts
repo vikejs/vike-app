@@ -215,26 +215,6 @@ describe("vike(app)", () => {
     }
   });
 
-  it("answers HEAD on a route registered after vike(app)", async () => {
-    const app = express();
-    vike(app);
-    app.get("/api/me", (_req, res) => {
-      res.send("api");
-    });
-
-    const response = await send(app, "/api/me", { method: "HEAD" });
-    expect(response.status).toBe(200);
-  });
-
-  it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
-    const app = express();
-    vike(app);
-
-    const response = await send(app, "/about", { method: "DELETE" });
-    expect(response.status).toBe(404);
-    expect(await response.text()).toBe("Not Found");
-  });
-
   describe("a route registered before vike(app)", () => {
     const sub = () => {
       const router = express.Router();

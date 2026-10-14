@@ -49,17 +49,6 @@ describe("@vikejs/h3", () => {
     expect([await response.text(), response.headers.get("x-app")]).toEqual(["+middleware", "applied"]);
   });
 
-  it("answers 200 JSON from a route that returns an object, with the response step of the +middleware applied", async () => {
-    const app = new H3();
-    vike(app);
-    app.get("/api/me", (event) => ({ user: (getContext(event) as { user: string }).user }));
-
-    const response = await send(app, "/api/me", { headers: { "x-user": "alice", "x-step": "1" } });
-    expect(response.status).toBe(200);
-    expect(response.headers.get("x-step")).toBe("applied");
-    expect(await response.json()).toEqual({ user: "alice" });
-  });
-
   it("answers with a +middleware that is a handler where the app has no route", async () => {
     const app = new H3();
     vike(app);

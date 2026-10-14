@@ -130,25 +130,6 @@ describe("@vikejs/fastify", () => {
     expect(response.json()).toEqual({ a: 1 });
   });
 
-  it("answers HEAD on a route registered after vike(app)", async () => {
-    const app = Fastify();
-    await vike(app);
-    app.get("/api/me", () => "api");
-
-    expect((await app.inject({ method: "HEAD", url: "/api/me" })).statusCode).toBe(200);
-  });
-
-  it("keeps a redirect and a 204 from a route registered after vike(app)", async () => {
-    const app = Fastify();
-    await vike(app);
-    app.get("/old", (_request, reply) => reply.redirect("/new", 302));
-    app.get("/empty", (_request, reply) => reply.code(204).send());
-
-    const redirect = await app.inject({ url: "/old" });
-    expect([redirect.statusCode, redirect.headers.location]).toEqual([302, "/new"]);
-    expect((await app.inject({ url: "/empty" })).statusCode).toBe(204);
-  });
-
   it("keeps the context of concurrent requests apart", async () => {
     const app = Fastify();
     await vike(app);

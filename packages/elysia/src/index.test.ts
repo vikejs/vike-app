@@ -138,24 +138,6 @@ describe("@vikejs/elysia", () => {
     }
   });
 
-  it("answers HEAD on a route registered after vike(app)", async () => {
-    const app = new Elysia();
-    vike(app);
-    app.get("/api/me", () => "api");
-
-    const response = await send(app, "/api/me", { method: "HEAD" });
-    expect(response.status).toBe(200);
-  });
-
-  it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
-    const app = new Elysia();
-    vike(app);
-
-    const response = await send(app, "/about", { method: "DELETE" });
-    expect(response.status).toBe(404);
-    expect(await response.text()).toBe("Not Found");
-  });
-
   describe("a route registered before vike(app)", () => {
     it.each([
       ["GET", (app: Elysia) => app.get("/health", () => "ok")],

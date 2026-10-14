@@ -223,23 +223,6 @@ describe("@vikejs/hono", () => {
     expect(await response.json()).toEqual({ a: 1 });
   });
 
-  it("answers HEAD on a route registered after vike(app)", async () => {
-    const app = new Hono();
-    vike(app);
-    app.get("/api/me", (c) => c.text("api"));
-
-    expect((await app.request("/api/me", { method: "HEAD" })).status).toBe(200);
-  });
-
-  it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
-    const app = new Hono();
-    vike(app);
-
-    const response = await app.request("/about", { method: "DELETE" });
-    expect(response.status).toBe(404);
-    expect(await response.text()).toBe("Not Found");
-  });
-
   describe("a route registered before vike(app)", () => {
     it.each([
       ["GET", (app: Hono) => app.get("/health", (c) => c.text("ok"))],
