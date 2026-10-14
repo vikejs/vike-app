@@ -215,6 +215,15 @@ describe("vike(app)", () => {
     }
   });
 
+  it("passes a DELETE to Vike, which answers 404", async () => {
+    const app = express();
+    vike(app);
+
+    const response = await send(app, "/about", { method: "DELETE" });
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe("Not Found");
+  });
+
   describe("a route registered before vike(app)", () => {
     const sub = () => {
       const router = express.Router();
