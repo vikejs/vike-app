@@ -30,7 +30,7 @@
     "fastify": "^5.12.5",
     "tsdown": "^0.21.10",
     "typescript": "^5.9.3",
-    "vike": "0.4.267-commit-e667e7c",
+    "vike": "0.4.267-commit-83049a4",
     "vitest": "^4.1.9"
   },
   "peerDependencies": {

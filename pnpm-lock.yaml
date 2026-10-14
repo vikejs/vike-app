@@ -52,8 +52,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@20.19.43)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
@@ -95,8 +95,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@20.19.43)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
@@ -126,8 +126,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@20.19.43)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
@@ -154,8 +154,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@2.0.2)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@2.0.2)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@20.19.43)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
@@ -182,8 +182,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@20.19.43)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
@@ -210,8 +210,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
 
   test/app:
     devDependencies:
@@ -219,8 +219,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)
       vike:
-        specifier: 0.4.267-commit-e667e7c
-        version: 0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
+        specifier: 0.4.267-commit-83049a4
+        version: 0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1))
 
 packages:
 
@@ -2365,8 +2365,8 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vike@0.4.267-commit-e667e7c:
-    resolution: {integrity: sha512-EpiL/6AnDnos1WLyygtv+3Vzvf1NxLozO1CQ6vSYYrAo8CylsIayTTEtijLE0t91e17hRKlmKB2/R0Zxq2HOZg==}
+  vike@0.4.267-commit-83049a4:
+    resolution: {integrity: sha512-s28CzY03XmGFRlmD3N/K196KIfX1+erkAlPebmThea98bFYRnW4Xvuja1ux1txUGnWZl7Kx8YFVER1Y5tMoA3w==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -2937,7 +2937,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
@@ -2954,7 +2954,7 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -3919,7 +3919,7 @@ snapshots:
       process-warning: 5.1.0
       rfdc: 1.4.1
       secure-json-parse: 4.1.0
-      semver: 7.8.4
+      semver: 7.8.5
       toad-cache: 3.7.1
 
   fastq@1.20.1:
@@ -4731,7 +4731,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vike@0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
+  vike@0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@0.11.17)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/types': 7.29.7
@@ -4769,7 +4769,7 @@ snapshots:
       - srvx
       - supports-color
 
-  vike@0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
+  vike@0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@1.15.11)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/types': 7.29.7
@@ -4807,7 +4807,7 @@ snapshots:
       - srvx
       - supports-color
 
-  vike@0.4.267-commit-e667e7c(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@2.0.2)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
+  vike@0.4.267-commit-83049a4(@types/express@5.0.6)(elysia@1.4.30(@sinclair/typebox@0.34.49)(exact-mirror@1.2.2)(file-type@22.0.1)(openapi-types@12.1.3)(typescript@5.9.3))(fastify@5.12.5)(h3@2.0.2)(hono@4.13.13)(srvx@1.0.5)(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/types': 7.29.7
@@ -4852,7 +4852,7 @@ snapshots:
   vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.1):
     dependencies:
       lightningcss: 1.32.0
-      picomatch: 4.0.4
+      picomatch: 4.0.7
       postcss: 8.5.15
       rolldown: 1.0.3
       tinyglobby: 0.2.17
