@@ -2,7 +2,6 @@ export default vike;
 export * from "@universal-middleware/h3";
 
 import { type App, apply, createHandler } from "@universal-middleware/h3";
-import { eventHandler } from "h3";
 import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareH3 = Parameters<typeof apply>[1][number];
@@ -22,33 +21,12 @@ function vike(app: App, middlewares: EnhancedMiddlewareH3[] = []) {
     const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
     throw new Error(errMsg);
   }
-  assertNoRouteBefore(app);
   installed.add(app);
 
-  appendHandlersOnFirstRequest(app, middlewares);
+  // h3 matches the most specific route first, so the app's routes answer before this catch-all, whenever they're registered
+  const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
+  app.all("/**", handlersPipe);
 
   const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
   return apply(app, [nonHandlersPipe]);
-}
-
-function assertNoRouteBefore(app: App) {
-  // h3 marks routers, nested apps and lazy handlers with `__resolve__`, and not a plain middleware
-  const layer = app.stack.find((layer) => layer.handler.__resolve__);
-  if (layer) {
-    const errMsg =
-      `${errMsgIntro} a router, a nested app or a lazy handler was mounted on ${layer.route} before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server` as const;
-    throw new Error(errMsg);
-  }
-}
-
-// The app is complete at the first request: a route registered after it sits behind the handlers
-function appendHandlersOnFirstRequest(app: App, middlewares: EnhancedMiddlewareH3[]) {
-  const onRequest = app.options.onRequest;
-  app.options.onRequest = async (event) => {
-    app.options.onRequest = onRequest;
-    // Not apply(app, [getMiddlewaresPipe_handlers(middlewares)]): it would set app.options.onBeforeResponse again, dropping one the app set after vike(app)
-    const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
-    app.use(eventHandler((event) => handlersPipe(event)));
-    await onRequest?.(event);
-  };
 }

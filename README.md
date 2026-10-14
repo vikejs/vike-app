@@ -11,7 +11,7 @@ Docs: see [vike.dev/server](https://vike.dev/server)
 | [`@vikejs/hono`](packages/hono) | [Hono](https://hono.dev) |
 | [`@vikejs/express`](packages/express) | [Express](https://expressjs.com) |
 | [`@vikejs/fastify`](packages/fastify) | [Fastify](https://fastify.dev) |
-| [`@vikejs/h3`](packages/h3) | [H3](https://h3.unjs.io) |
+| [`@vikejs/h3`](packages/h3) | [H3](https://h3.dev) |
 | [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) |
 | [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) |
 

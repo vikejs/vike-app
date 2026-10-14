@@ -1,5 +1,5 @@
 import { enhance } from "@universal-middleware/core";
-import { createApp, createRouter, eventHandler, lazyEventHandler, readBody, toWebHandler } from "h3";
+import { H3, readBody } from "h3";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("vike/__internal", () => import("../../../test/vikeInternalStub.js"));
@@ -15,28 +15,19 @@ describe("@vikejs/h3", () => {
     expect(apply).toBeTypeOf("function");
   });
 
-  const send = (app: ReturnType<typeof createApp>, path: string, init?: RequestInit) =>
-    toWebHandler(app)(new Request(`http://localhost${path}`, init));
-  const routerApp = (app: ReturnType<typeof createApp>) => {
-    const router = createRouter();
-    app.use(router);
-    return router;
-  };
+  const send = (app: H3, path: string, init?: RequestInit) => app.fetch(new Request(`http://localhost${path}`, init));
 
   it("runs the +middleware before a route registered after vike(app), and the route sees the context", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/api/me",
-      eventHandler((event) => ({ user: (getContext(event) as { user: string }).user })),
-    );
+    app.get("/api/me", (event) => ({ user: (getContext(event) as { user: string }).user }));
 
     const response = await send(app, "/api/me", { headers: { "x-user": "alice" } });
     expect(await response.json()).toEqual({ user: "alice" });
   });
 
   it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app, [
       enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
     ]);
@@ -53,7 +44,7 @@ describe("@vikejs/h3", () => {
       },
       { name: "app-header" },
     );
-    const app = createApp();
+    const app = new H3();
     vike(app, [appHeader]);
 
     const response = await send(app, "/about", { headers: { "x-answer": "1" } });
@@ -61,12 +52,9 @@ describe("@vikejs/h3", () => {
   });
 
   it("answers 200 JSON from a route that returns an object, with the response step of the +middleware applied", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/api/me",
-      eventHandler((event) => ({ user: (getContext(event) as { user: string }).user })),
-    );
+    app.get("/api/me", (event) => ({ user: (getContext(event) as { user: string }).user }));
 
     const response = await send(app, "/api/me", { headers: { "x-user": "alice", "x-step": "1" } });
     expect(response.status).toBe(200);
@@ -75,40 +63,31 @@ describe("@vikejs/h3", () => {
   });
 
   it("answers with a +middleware that is a handler where the app has no route", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
     expect(await (await send(app, "/x")).text()).toBe("handler");
   });
 
   it("answers with the app's route when a +middleware that is a handler has the same path", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/x",
-      eventHandler(() => "app"),
-    );
+    app.get("/x", () => "app");
     expect(await (await send(app, "/x")).text()).toBe("app");
   });
 
   it("answers with a handler passed to vike(app) after the app's routes", async () => {
     const passed = enhance(() => new Response("passed"), { name: "passed", method: "GET", path: "/y/**" });
-    const app = createApp();
+    const app = new H3();
     vike(app, [passed]);
-    routerApp(app).get(
-      "/y/route",
-      eventHandler(() => "app"),
-    );
+    app.get("/y/route", () => "app");
     expect(await (await send(app, "/y/route")).text()).toBe("app");
     expect(await (await send(app, "/y/other")).text()).toBe("passed");
   });
 
   it("applies the response step of the +middleware to the response of a route registered after vike(app), and of a page", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/api/me",
-      eventHandler(() => "api"),
-    );
+    app.get("/api/me", () => "api");
 
     for (const path of ["/api/me", "/about"]) {
       expect((await send(app, path, { headers: { "x-step": "1" } })).headers.get("x-step")).toBe("applied");
@@ -117,15 +96,12 @@ describe("@vikejs/h3", () => {
   });
 
   it("keeps the context of concurrent requests apart", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/api/me",
-      eventHandler(async (event) => {
-        await new Promise((resolve) => setTimeout(resolve, 20));
-        return (getContext(event) as { user: string }).user;
-      }),
-    );
+    app.get("/api/me", async (event) => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      return (getContext(event) as { user: string }).user;
+    });
 
     const [slow, fast] = await Promise.all([
       send(app, "/api/me", { headers: { "x-user": "slow", "x-delay": "30" } }),
@@ -135,34 +111,25 @@ describe("@vikejs/h3", () => {
   });
 
   it("renders a page after the app's routes", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/api/me",
-      eventHandler(() => "api"),
-    );
+    app.get("/api/me", () => "api");
 
     expect(await (await send(app, "/about")).text()).toBe("page /about");
   });
 
   it("answers with the app's route when a page has the same path", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).get(
-      "/about",
-      eventHandler(() => "app"),
-    );
+    app.get("/about", () => "app");
 
     expect(await (await send(app, "/about")).text()).toBe("app");
   });
 
   it("hands a JSON body to a route registered after vike(app)", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    routerApp(app).post(
-      "/api/echo",
-      eventHandler((event) => readBody(event)),
-    );
+    app.post("/api/echo", (event) => readBody(event));
 
     const response = await send(app, "/api/echo", {
       method: "POST",
@@ -173,32 +140,16 @@ describe("@vikejs/h3", () => {
   });
 
   it("answers HEAD on a route registered after vike(app)", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
-    // h3's router answers HEAD with 404 for a `get` route, so the route answers every method
-    app.use(
-      "/api/me",
-      eventHandler(() => "api"),
-    );
+    app.get("/api/me", () => "api");
 
     const response = await send(app, "/api/me", { method: "HEAD" });
     expect(response.status).toBe(200);
   });
 
-  it("appends the pages once, at the first request", async () => {
-    const app = createApp();
-    vike(app);
-    const before = app.stack.length;
-
-    await send(app, "/about");
-    const after = app.stack.length;
-    expect(after).toBeGreaterThan(before);
-    await send(app, "/about");
-    expect(app.stack.length).toBe(after);
-  });
-
   it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
 
     const response = await send(app, "/about", { method: "DELETE" });
@@ -206,62 +157,25 @@ describe("@vikejs/h3", () => {
     expect(await response.text()).toBe("Not Found");
   });
 
-  it("keeps the app's own onRequest", async () => {
-    const onRequest = vi.fn();
-    const app = createApp({ onRequest });
+  it("runs the +middleware before a route registered before vike(app)", async () => {
+    const app = new H3();
+    app.get("/api/me", (event) => (getContext(event) as { user: string }).user);
     vike(app);
 
-    await send(app, "/about");
-    await send(app, "/about");
-    expect(onRequest).toHaveBeenCalledTimes(2);
+    expect(await (await send(app, "/api/me", { headers: { "x-user": "alice" } })).text()).toBe("alice");
   });
 
-  describe("a route registered before vike(app)", () => {
-    const router = () =>
-      createRouter().get(
-        "/health",
-        eventHandler(() => "ok"),
-      );
+  it("answers with the app's route registered after the first request", async () => {
+    const app = new H3();
+    vike(app);
+    await send(app, "/about");
+    app.get("/about", () => "app");
 
-    it.each([
-      ["a router", (app: ReturnType<typeof createApp>) => app.use(router())],
-      ["a router on a path", (app: ReturnType<typeof createApp>) => app.use("/api", router().handler)],
-      ["a nested app", (app: ReturnType<typeof createApp>) => app.use("/sub", createApp().handler)],
-      [
-        "a lazy handler",
-        (app: ReturnType<typeof createApp>) =>
-          app.use(
-            "/lazy",
-            lazyEventHandler(() => eventHandler(() => "ok")),
-          ),
-      ],
-    ])("throws for %s", (_name, register) => {
-      const app = createApp();
-      register(app);
-      expect(() => vike(app)).toThrow(/Wrong installation: .+ before vike\(app\)/);
-    });
-
-    it("names the path the router was mounted on", () => {
-      const app = createApp();
-      app.use("/api", router().handler);
-      expect(() => vike(app)).toThrow(/mounted on \/api before vike\(app\)/);
-    });
-
-    it.each([
-      ["a middleware", (app: ReturnType<typeof createApp>) => app.use(eventHandler(() => {}))],
-      [
-        "a middleware passed to apply()",
-        (app: ReturnType<typeof createApp>) => apply(app, [enhance(() => {}, { name: "session" })]),
-      ],
-    ])("does not throw for %s", (_name, register) => {
-      const app = createApp();
-      register(app);
-      expect(() => vike(app)).not.toThrow();
-    });
+    expect(await (await send(app, "/about")).text()).toBe("app");
   });
 
   it("throws when vike(app) is called twice on the same app", () => {
-    const app = createApp();
+    const app = new H3();
     vike(app);
     expect(() => vike(app)).toThrow(/already called/);
   });
