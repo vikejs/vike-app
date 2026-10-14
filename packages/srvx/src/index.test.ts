@@ -79,11 +79,11 @@ describe("@vikejs/srvx", () => {
   it("keeps the context of concurrent requests apart", async () => {
     const fetch = vike([enhance(apiRoute, { name: "api", method: "GET", path: "/api/me" })]);
 
-    const [slow, fast] = await Promise.all([
-      send(fetch, "/api/me", { headers: { "x-user": "slow", "x-delay": "30" } }),
-      send(fetch, "/api/me", { headers: { "x-user": "fast" } }),
+    const [alice, bob] = await Promise.all([
+      send(fetch, "/api/me", { headers: { "x-user": "alice", "x-meet": "1" } }),
+      send(fetch, "/api/me", { headers: { "x-user": "bob", "x-meet": "1" } }),
     ]);
-    expect([await slow.text(), await fast.text()]).toEqual(["slow", "fast"]);
+    expect([await alice.text(), await bob.text()]).toEqual(["alice", "bob"]);
   });
 
   it("hands a JSON body to a route in middlewares", async () => {

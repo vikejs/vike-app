@@ -11,13 +11,11 @@ const meet = () =>
   });
 
 export default [
-  // Puts the `x-user` header in the context, once the other `x-meet` request has arrived or after `x-delay`
-  // milliseconds; with an `x-step` header it also adds a response step that sets `x-step` on the response, and with an
-  // `x-answer` header it answers itself
+  // Puts the `x-user` header in the context, once the other `x-meet` request has arrived; with an `x-step` header it
+  // also adds a response step that sets `x-step` on the response, and with an `x-answer` header it answers itself
   enhance(
     async (request: Request, context: Universal.Context) => {
       if (request.headers.has("x-meet")) await meet();
-      else await new Promise((resolve) => setTimeout(resolve, Number(request.headers.get("x-delay") ?? 0)));
       Object.assign(context, { user: request.headers.get("x-user") });
       if (request.headers.has("x-answer")) return new Response("+middleware");
       if (!request.headers.has("x-step")) return;

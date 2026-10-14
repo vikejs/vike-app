@@ -97,11 +97,11 @@ describe("@vikejs/hono", () => {
       return c.text((getContext(c as never) as { user: string }).user);
     });
 
-    const [slow, fast] = await Promise.all([
-      app.request("/api/me", { headers: { "x-user": "slow", "x-delay": "30" } }),
-      app.request("/api/me", { headers: { "x-user": "fast" } }),
+    const [alice, bob] = await Promise.all([
+      app.request("/api/me", { headers: { "x-user": "alice", "x-meet": "1" } }),
+      app.request("/api/me", { headers: { "x-user": "bob", "x-meet": "1" } }),
     ]);
-    expect([await slow.text(), await fast.text()]).toEqual(["slow", "fast"]);
+    expect([await alice.text(), await bob.text()]).toEqual(["alice", "bob"]);
   });
 
   it("renders a page after the app's routes", async () => {

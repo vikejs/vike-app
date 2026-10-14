@@ -108,11 +108,11 @@ describe("@vikejs/h3", () => {
       return (getContext(event) as { user: string }).user;
     });
 
-    const [slow, fast] = await Promise.all([
-      send(app, "/api/me", { headers: { "x-user": "slow", "x-delay": "30" } }),
-      send(app, "/api/me", { headers: { "x-user": "fast" } }),
+    const [alice, bob] = await Promise.all([
+      send(app, "/api/me", { headers: { "x-user": "alice", "x-meet": "1" } }),
+      send(app, "/api/me", { headers: { "x-user": "bob", "x-meet": "1" } }),
     ]);
-    expect([await slow.text(), await fast.text()]).toEqual(["slow", "fast"]);
+    expect([await alice.text(), await bob.text()]).toEqual(["alice", "bob"]);
   });
 
   it("renders a page after the app's routes", async () => {
