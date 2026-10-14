@@ -138,7 +138,7 @@ describe("@vikejs/h3", () => {
     expect(response.headers.get("x-from")).toBe("app");
   });
 
-  it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
+  it("passes a DELETE to Vike, which answers 404", async () => {
     const app = new H3();
     vike(app);
 
