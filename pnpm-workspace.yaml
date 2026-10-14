@@ -4,3 +4,4 @@ allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
   - '@universal-middleware/*'
+  - vike@0.4.267-commit-e667e7c
