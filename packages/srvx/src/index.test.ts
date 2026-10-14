@@ -1,14 +1,7 @@
-import { fileURLToPath } from "node:url";
 import { enhance } from "@universal-middleware/core";
-import { createDevMiddleware } from "vike/server";
-import { afterAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import vike, { apply } from "./index.js";
-
-// Vike's global context comes from this app: the tests drive its +middleware with request headers
-const { viteServer } = await createDevMiddleware({
-  root: fileURLToPath(new URL("../../../test/app", import.meta.url)),
-});
-afterAll(() => viteServer.close());
+import "../../../test/app/start.js";
 
 describe("@vikejs/srvx", () => {
   it("vike is a function", () => {
