@@ -21,6 +21,8 @@ feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's o
 
 `@vikejs/h3` now requires h3 v2: create the app with `new H3()` and register routes with `app.get()` and the like. A route's own `Set-Cookie` is now sent once, and a `+middleware` response function can remove a header the route set.
 
+The re-exported `apply()` and `createMiddleware()` now come from the Universal Middleware adapters built on `@universal-middleware/core` 0.7. Their `apply()` changes the order middlewares run in, see [core 0.7.0's release notes](https://github.com/magne4000/universal-middleware/releases/tag/%40universal-middleware/core%400.7.0). For example, it runs a middleware with a positive `order` after the handler. On Hono and srvx, `createMiddleware()` now applies response functions in the order their middlewares are registered, no longer in reverse.
+
 For more control, apply `globalContext.middlewares` yourself, see [vike.dev/middleware#manual-integration](https://vike.dev/middleware#manual-integration).
 
 Requires Vike 0.4.268 or later, which ships `globalContext.middlewares` and, in `vike/__internal`, the `getMiddlewaresPipe_nonHandlers` and `getMiddlewaresPipe_handlers` that `vike(app)` applies. With an older Vike, the adapters fail when they are imported.

@@ -2,8 +2,8 @@ import {
   enhance,
   getUniversal,
   getUniversalProp,
+  isHandler,
   orderSymbol,
-  pathSymbol,
   pipeRoute,
   type RuntimeAdapterTarget,
   type UniversalMiddleware,
@@ -31,12 +31,6 @@ const plusMiddleware = enhance(
   },
   { name: "stub:plus" },
 );
-
-// Like @universal-middleware/core's isHandler(), which its 0.6.0 doesn't export
-const isHandler = (middleware: UniversalMiddleware) => {
-  const order = getUniversalProp(middleware, orderSymbol);
-  return typeof order === "number" ? order === 0 : Boolean(getUniversalProp(middleware, pathSymbol));
-};
 
 // Like the real one: one loop over the +middleware and the app's middlewares that aren't handlers, by order, the
 // +middleware first at equal order. The first Response answers, the app's middlewares after it still run, and the
