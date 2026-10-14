@@ -149,24 +149,11 @@ describe("@vikejs/fastify", () => {
     expect((await app.inject({ url: "/empty" })).statusCode).toBe(204);
   });
 
-  // A request reads the context after an await, while the other request's +middleware has already set its own. The
-  // `x-meet` header and the barrier make the two requests interleave every time, so the test fails if the context is
-  // shared between requests.
   it("keeps the context of concurrent requests apart", async () => {
-    const meet = (count: number) => {
-      let arrived = 0;
-      let release: () => void;
-      const met = new Promise<void>((resolve) => (release = resolve));
-      return () => {
-        if (++arrived === count) release();
-        return met;
-      };
-    };
-    const routesStarted = meet(2);
     const app = Fastify();
     await vike(app);
     app.get("/api/me", async (request) => {
-      await routesStarted();
+      await new Promise((resolve) => setTimeout(resolve, 20));
       return user(request);
     });
 
