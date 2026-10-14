@@ -142,10 +142,13 @@ describe("@vikejs/h3", () => {
   it("answers HEAD on a route registered after vike(app)", async () => {
     const app = new H3();
     vike(app);
-    app.get("/api/me", () => "api");
+    app.get("/api/me", (event) => {
+      event.res.headers.set("x-from", "app");
+      return "api";
+    });
 
     const response = await send(app, "/api/me", { method: "HEAD" });
-    expect(response.status).toBe(200);
+    expect(response.headers.get("x-from")).toBe("app");
   });
 
   it("answers Vike's 404 for DELETE, which Vike's pages don't declare", async () => {
