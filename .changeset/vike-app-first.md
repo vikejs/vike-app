@@ -9,7 +9,7 @@
 
 feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's own routes; handlers run with the pages after them
 
-`vike(app)` now installs the `+middleware` that aren't handlers right away (looked up on every request, so a `+middleware` you add, remove or edit in `vike dev` needs no restart) and arranges for the `+middleware` that are handlers (`order: 0`, or a `path` and no `order`, such as Telefunc's `/_telefunc`) and Vike's pages and not-found page to run after the routes the app registers later, so a route the app registers after `vike(app)` on the same path answers instead of them. Routes the app registers after `vike(app)` see what the `+middleware` put in the context and keep their precedence over pages. The signature is unchanged.
+`vike(app)` now runs the `+middleware` that aren't handlers before the routes the app registers after it, and the `+middleware` that are handlers and Vike's pages after them; those routes see the context the `+middleware` set. The signature is unchanged.
 
 - Express: the pages are appended when the first request arrives; a route registered after the first request sits behind the pages.
 - H3: the pages are the route `/**` for every method but HEAD, which h3 answers with the GET route. h3 picks the most specific path, so an app's route answers before the pages whenever it's registered, unless its path is `/**` too.
