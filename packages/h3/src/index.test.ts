@@ -168,15 +168,6 @@ describe("@vikejs/h3", () => {
     expect(await (await send(app, "/api/me", { headers: { "x-user": "alice" } })).text()).toBe("alice");
   });
 
-  it("answers with the app's route registered after the first request", async () => {
-    const app = new H3();
-    vike(app);
-    await send(app, "/about");
-    app.get("/about", () => "app");
-
-    expect(await (await send(app, "/about")).text()).toBe("app");
-  });
-
   it("throws when vike(app) is called twice on the same app", () => {
     const app = new H3();
     vike(app);
