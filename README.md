@@ -6,14 +6,14 @@ Docs: see [vike.dev/server](https://vike.dev/server)
 
 ## Packages
 
-| Package | Framework |
-|---|---|
-| [`@vikejs/hono`](packages/hono) | [Hono](https://hono.dev) |
-| [`@vikejs/express`](packages/express) | [Express](https://expressjs.com) |
-| [`@vikejs/fastify`](packages/fastify) | [Fastify](https://fastify.dev) |
-| [`@vikejs/h3`](packages/h3) | [H3](https://h3.dev) |
-| [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) |
-| [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) |
+| Package | Framework | Changelog |
+|---|---|---|
+| [`@vikejs/hono`](packages/hono) | [Hono](https://hono.dev) | [CHANGELOG.md](packages/hono/CHANGELOG.md) |
+| [`@vikejs/express`](packages/express) | [Express](https://expressjs.com) | [CHANGELOG.md](packages/express/CHANGELOG.md) |
+| [`@vikejs/fastify`](packages/fastify) | [Fastify](https://fastify.dev) | [CHANGELOG.md](packages/fastify/CHANGELOG.md) |
+| [`@vikejs/h3`](packages/h3) | [H3](https://h3.dev) | [CHANGELOG.md](packages/h3/CHANGELOG.md) |
+| [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) |
+| [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) |
 
 ## Overview
 
