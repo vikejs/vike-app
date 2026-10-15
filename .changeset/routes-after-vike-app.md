@@ -4,4 +4,4 @@
 "@vikejs/elysia": minor
 ---
 
-BREAKING CHANGE: `vike(app)` throws if one of the app's routes was registered before it; call `vike(app)` before registering your routes
+BREAKING CHANGE: `vike(app)` throws if a route such as `app.get('/api', …)` was registered before it; call `vike(app)` first, then register your routes
