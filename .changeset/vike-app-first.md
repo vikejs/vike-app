@@ -7,6 +7,6 @@
 "@vikejs/srvx": minor
 ---
 
-feat: `vike(app)` runs the `+middleware` that aren't handlers before the app's own routes; handlers run with the pages after them
+feat: `vike(app)` runs the `+middleware` that aren't handlers before the user's routes; handlers run after them
 
-- Requires Vike 0.4.268 or later.
+Requires Vike 0.4.268 or later.
