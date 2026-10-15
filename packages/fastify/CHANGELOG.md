@@ -4,55 +4,57 @@
 
 ### Minor Changes
 
-- b85b21c: feat: `vike(app)` runs the server middlewares from Vike extension ([`+middleware`](https://vike.dev/middleware)) that aren't handlers before the user's routes; handlers run after them
-
-  BREAKING CHANGE:
-
-  - Requires Vike 0.4.268 or above
-  - `vike(app)` must be called first, before registering your routes
+- `vike(app)` runs the server middlewares from Vike extensions ([`+middleware`](https://vike.dev/middleware)) that aren't handlers before your routes; handlers run after them ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
+- **BREAKING CHANGE:** Requires Vike `0.4.268` or above ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
+- **BREAKING CHANGE:** Call `vike(app)` first, before registering your routes ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
+- Update `@universal-middleware/fastify` to `^0.7.0`, built on `@universal-middleware/core` 0.7 ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
 
 ## 0.3.0
 
 ### Minor Changes
 
-- f6d40d9: feat: use the `@universal-middleware/*` adapters built on `@universal-middleware/core` 0.5
-
-  The `path` of middlewares passed to `vike(app, middlewares)`, or registered with the re-exported `apply()`, now follows the [rou3 v0.12+ (1.x) syntax](https://github.com/h3js/rou3/releases/tag/v0.12.0), aligned with URLPattern: `*` matches the rest of the path, `/` included (use `:name` to match a single segment).
-
-  `@vikejs/hono`, `@vikejs/elysia` and `@vikejs/fastify` now require `hono@^4.13.13`, `elysia@^1.4.30` and `fastify@^5.12.5`, the minimum versions `@universal-middleware/core` 0.5 supports.
+- Update `@universal-middleware/fastify` to `^0.6.0`, built on `@universal-middleware/core` 0.5 ([#11](https://github.com/vikejs/vike-server-adapters/pull/11))
+- **BREAKING CHANGE:** The `path` of middlewares passed to `vike(app, middlewares)`, or registered with the re-exported `apply()`, follows the [rou3 v0.12+ (1.x) syntax](https://github.com/h3js/rou3/releases/tag/v0.12.0), aligned with URLPattern: `*` matches the rest of the path, `/` included (use `:name` to match a single segment) ([#11](https://github.com/vikejs/vike-server-adapters/pull/11))
+- **BREAKING CHANGE:** Requires Fastify `5.12.5` or above, the minimum version `@universal-middleware/core` 0.5 supports ([#11](https://github.com/vikejs/vike-server-adapters/pull/11))
 
 ## 0.2.5
 
 ### Patch Changes
 
-- 3fd0147: fix: bump dependencies
+- Update `@universal-middleware/fastify` to `^0.5.26` and `srvx` to `^0.11.17` ([#7](https://github.com/vikejs/vike-server-adapters/pull/7))
+
+## 0.2.4
+
+### Patch Changes
+
+- Revert the `toFetchHandler()` change of 0.2.2: it's srvx's own `toFetchHandler()` again ([d51778d](https://github.com/vikejs/vike-server-adapters/commit/d51778d877ed19aba20e5b05b0ca2ff5c34952e9))
 
 ## 0.2.3
 
 ### Patch Changes
 
-- 106bcb5: fix: revert `toFetchHandler` wrapping for fastify
+- Meant to revert the `toFetchHandler()` change of 0.2.2, but the published package still contains it: use 0.2.4 instead
 
 ## 0.2.2
 
 ### Patch Changes
 
-- 0afad6f: fix: bump srvx to avoid deadlock
+- Avoid a deadlock with srvx in `toFetchHandler()`, and update `srvx` to `^0.11.15` ([#5](https://github.com/vikejs/vike-server-adapters/pull/5))
 
 ## 0.2.1
 
 ### Patch Changes
 
-- 8f181ff: feat: export toFetchHandler utils
+- Export srvx's `toFetchHandler()` (from `srvx/node`), to turn the app into a `fetch` handler ([#4](https://github.com/vikejs/vike-server-adapters/pull/4))
 
 ## 0.2.0
 
 ### Minor Changes
 
-- f24f3e2: feat: replace addVikeMiddleware with a default vike export
+- **BREAKING CHANGE:** Replace the named export `addVikeMiddleware()` with the default export `vike()` ([68d26e8](https://github.com/vikejs/vike-server-adapters/commit/68d26e87ec5747a140e76e667c213aec81468988))
 
 ## 0.1.0
 
 ### Minor Changes
 
-- 5d479d5: initial release
+- Initial release
