@@ -10,7 +10,11 @@
     "lint": "biome lint .",
     "check": "biome check --write .",
     "typecheck": "pnpm -r run typecheck",
-    "test": "pnpm -r run test"
+    "test": "pnpm -r run test",
+    "release": "pnpm -r --workspace-concurrency=1 run release",
+    "release:minor": "pnpm -r --workspace-concurrency=1 run release:minor",
+    "release:major": "pnpm -r --workspace-concurrency=1 run release:major",
+    "release:commit": "pnpm -r --workspace-concurrency=1 run release:commit"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",

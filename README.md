@@ -44,14 +44,15 @@ When a pull request is squash merged, its title becomes the commit message, so t
 
 ### Release
 
-Each package is released on its own with [`@brillout/release-me`](https://github.com/brillout/release-me), from an up-to-date `main` branch:
+Packages are released with [`@brillout/release-me`](https://github.com/brillout/release-me), from an up-to-date `main` branch:
 
 ```sh
-cd packages/hono
 pnpm run release         # patch: 0.4.0 => 0.4.1
 pnpm run release:minor   # minor: 0.4.0 => 0.5.0 (also for breaking changes, while the version is 0.x)
 pnpm run release:major   # major: 0.4.0 => 1.0.0
 pnpm run release:commit  # pre-release: 0.4.0-commit-a1b2c3d, published right away
 ```
 
-The other scripts preview the `CHANGELOG.md` and `package.json` changes and ask for confirmation, then build and publish the package, and push a release commit and a Git tag (e.g. `@vikejs/hono@0.4.1`).
+At the root, these scripts release the packages one at a time, skipping each package that has no new `CHANGELOG.md` entry (`release:commit` publishes them all). Run them in a package's directory, such as `packages/hono/`, to release only that package.
+
+Except for `release:commit`, they preview the `CHANGELOG.md` and `package.json` changes and ask for confirmation, then build and publish the package, and push a release commit and a Git tag (e.g. `@vikejs/hono@0.4.1`).
