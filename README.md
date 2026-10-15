@@ -15,10 +15,6 @@ Docs: [vike.dev/server](https://vike.dev/server)
 | [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) |
 | [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) |
 
-## Overview
-
-Each package exposes a `vike()` helper that registers Vike's middleware on your server app. They also re-export the full [`@universal-middleware`](https://github.com/magne4000/universal-middleware) API for the corresponding framework.
-
 ## Sandwich approach
 
 `vike(app)` puts the app's routes between Vike's +middleware:
@@ -28,10 +24,3 @@ Each package exposes a `vike()` helper that registers Vike's middleware on your 
 3. The +middleware that are handlers and Vike's page handler run last: they answer the requests no route answers.
 
 Each server adapter tests the three layers (`packages/*/src/index.test.ts`).
-
-## Contributing
-
-```sh
-pnpm install
-pnpm build
-```
