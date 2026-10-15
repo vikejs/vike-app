@@ -6,14 +6,14 @@ Docs: [vike.dev/server](https://vike.dev/server)
 
 ## Packages
 
-| Package | Framework | Changelog |
-|---|---|---|
-| [`@vikejs/hono`](packages/hono) | [Hono](https://hono.dev) | [CHANGELOG.md](packages/hono/CHANGELOG.md) |
-| [`@vikejs/express`](packages/express) | [Express](https://expressjs.com) | [CHANGELOG.md](packages/express/CHANGELOG.md) |
-| [`@vikejs/fastify`](packages/fastify) | [Fastify](https://fastify.dev) | [CHANGELOG.md](packages/fastify/CHANGELOG.md) |
-| [`@vikejs/h3`](packages/h3) | [H3](https://h3.dev) | [CHANGELOG.md](packages/h3/CHANGELOG.md) |
-| [`@vikejs/elysia`](packages/elysia) | [Elysia](https://elysiajs.com) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) |
-| [`@vikejs/srvx`](packages/srvx) | [srvx](https://srvx.unjs.io) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) |
+| Framework | Npm package | Changelog | Source code |
+|---|---|---|---|
+| [Hono](https://hono.dev) | [`@vikejs/hono`](https://www.npmjs.com/package/@vikejs/hono) | [CHANGELOG.md](packages/hono/CHANGELOG.md) | [`packages/hono/`](packages/hono) |
+| [Express](https://expressjs.com) | [`@vikejs/express`](https://www.npmjs.com/package/@vikejs/express) | [CHANGELOG.md](packages/express/CHANGELOG.md) | [`packages/express/`](packages/express) |
+| [Fastify](https://fastify.dev) | [`@vikejs/fastify`](https://www.npmjs.com/package/@vikejs/fastify) | [CHANGELOG.md](packages/fastify/CHANGELOG.md) | [`packages/fastify/`](packages/fastify) |
+| [H3](https://h3.dev) | [`@vikejs/h3`](https://www.npmjs.com/package/@vikejs/h3) | [CHANGELOG.md](packages/h3/CHANGELOG.md) | [`packages/h3/`](packages/h3) |
+| [Elysia](https://elysiajs.com) | [`@vikejs/elysia`](https://www.npmjs.com/package/@vikejs/elysia) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) | [`packages/elysia/`](packages/elysia) |
+| [srvx](https://srvx.unjs.io) | [`@vikejs/srvx`](https://www.npmjs.com/package/@vikejs/srvx) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) | [`packages/srvx/`](packages/srvx) |
 
 ## Sandwich approach
 
