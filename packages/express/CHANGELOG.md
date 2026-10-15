@@ -1,54 +1,84 @@
 # @vikejs/express
 
-## 0.4.0
+# [0.4.0](https://github.com/vikejs/vike-server-adapters/compare/875539e...75ccee7) (2026-10-15)
 
-### Minor Changes
 
-- `vike(app)` runs the server middlewares from Vike extensions ([`+middleware`](https://vike.dev/middleware)) that aren't handlers before your routes; handlers run after them ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
-- **BREAKING CHANGE:** Requires Vike `0.4.268` or above ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
-- **BREAKING CHANGE:** Call `vike(app)` first, before registering your routes ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
-- Update `@universal-middleware/express` to `^0.6.0`, built on `@universal-middleware/core` 0.7 ([#10](https://github.com/vikejs/vike-server-adapters/pull/10))
+### Bug Fixes
 
-## 0.3.0
+* `vike(app)` runs server middlewares from Vike extension ([`+middleware`](https://vike.dev/middleware)) that aren't handlers before the user's routes; handlers run after them ([#10](https://github.com/vikejs/vike-server-adapters/issues/10)) ([b85b21c](https://github.com/vikejs/vike-server-adapters/commit/b85b21c884b6f6707faefb713ecf3b7fc1368eda))
 
-### Minor Changes
 
-- Update `@universal-middleware/express` to `^0.5.0`, built on `@universal-middleware/core` 0.5 ([#11](https://github.com/vikejs/vike-server-adapters/pull/11))
-- **BREAKING CHANGE:** The `path` of middlewares passed to `vike(app, middlewares)`, or registered with the re-exported `apply()`, follows the [rou3 v0.12+ (1.x) syntax](https://github.com/h3js/rou3/releases/tag/v0.12.0), aligned with URLPattern: `*` matches the rest of the path, `/` included (use `:name` to match a single segment) ([#11](https://github.com/vikejs/vike-server-adapters/pull/11))
+### BREAKING CHANGES
 
-## 0.2.4
+* Requires Vike `0.4.268` or above
+* `vike(app)` must be called first, before registering your routes
 
-### Patch Changes
 
-- `toFetchHandler()` always resolves to a `Response`, with a `404` when the app doesn't handle the request, instead of `undefined`: `fetch: toFetchHandler(app)` type-checks again ([#9](https://github.com/vikejs/vike-server-adapters/pull/9))
 
-## 0.2.3
+# [0.3.0](https://github.com/vikejs/vike-server-adapters/compare/1997517...875539e) (2026-10-07)
 
-### Patch Changes
 
-- `toFetchHandler()` propagates the request's cancel event to the app: it's now built on `connectToWeb()` from `@universal-middleware/express` instead of srvx's `toFetchHandler()`, and `srvx` is no longer a dependency ([#8](https://github.com/vikejs/vike-server-adapters/pull/8))
-- Update `@universal-middleware/express` to `^0.4.30` ([#8](https://github.com/vikejs/vike-server-adapters/pull/8))
+### Features
 
-## 0.2.2
+* use the `@universal-middleware/*` adapters built on `@universal-middleware/core` 0.5 ([#11](https://github.com/vikejs/vike-server-adapters/issues/11)) ([f6d40d9](https://github.com/vikejs/vike-server-adapters/commit/f6d40d9af58255056d453d32536b79da865fa109))
 
-### Patch Changes
 
-- Avoid a deadlock with srvx in `toFetchHandler()`, and update `srvx` to `^0.11.15` ([#5](https://github.com/vikejs/vike-server-adapters/pull/5))
+### BREAKING CHANGES
 
-## 0.2.1
+* The `path` of middlewares passed to `vike(app, middlewares)`, or registered with the re-exported `apply()`, now follows the [rou3 v0.12+ (1.x) syntax](https://github.com/h3js/rou3/releases/tag/v0.12.0), aligned with URLPattern: `*` matches the rest of the path, `/` included (use `:name` to match a single segment).
 
-### Patch Changes
 
-- Export srvx's `toFetchHandler()` (from `srvx/node`), to turn the app into a `fetch` handler ([#4](https://github.com/vikejs/vike-server-adapters/pull/4))
 
-## 0.2.0
+## [0.2.4](https://github.com/vikejs/vike-server-adapters/compare/8216b9f...1997517) (2026-06-22)
 
-### Minor Changes
 
-- **BREAKING CHANGE:** Replace the named export `addVikeMiddleware()` with the default export `vike()` ([68d26e8](https://github.com/vikejs/vike-server-adapters/commit/68d26e87ec5747a140e76e667c213aec81468988))
+### Bug Fixes
 
-## 0.1.0
+* make `toFetchHandler()` always resolve to a `Response` (`404` when the app doesn't handle the request) ([#9](https://github.com/vikejs/vike-server-adapters/issues/9)) ([63ea32d](https://github.com/vikejs/vike-server-adapters/commit/63ea32d7972298c408cbb84135690c3bde1727c9))
 
-### Minor Changes
 
-- Initial release
+
+## [0.2.3](https://github.com/vikejs/vike-server-adapters/compare/a510378...8216b9f) (2026-06-19)
+
+
+### Bug Fixes
+
+* propagate the request's cancel event in `toFetchHandler()`, now built on `connectToWeb()` from `@universal-middleware/express` instead of srvx ([#8](https://github.com/vikejs/vike-server-adapters/issues/8)) ([3fd0147](https://github.com/vikejs/vike-server-adapters/commit/3fd0147129fe8a1e510e75d40bfd04bd10771c7f))
+
+
+
+## [0.2.2](https://github.com/vikejs/vike-server-adapters/compare/a7bb32b...a510378) (2026-04-03)
+
+
+### Bug Fixes
+
+* avoid a deadlock with srvx in `toFetchHandler()` ([#5](https://github.com/vikejs/vike-server-adapters/issues/5)) ([0afad6f](https://github.com/vikejs/vike-server-adapters/commit/0afad6fa956276d3af6d6ee76234721d13020541))
+
+
+
+## [0.2.1](https://github.com/vikejs/vike-server-adapters/compare/d80cb2e...a7bb32b) (2026-03-30)
+
+
+### Features
+
+* export `toFetchHandler()` (from `srvx/node`) to turn the app into a `fetch` handler ([#4](https://github.com/vikejs/vike-server-adapters/issues/4)) ([8f181ff](https://github.com/vikejs/vike-server-adapters/commit/8f181ff7b77d799c7aa450feb687eaed70e5f6b3))
+
+
+
+# [0.2.0](https://github.com/vikejs/vike-server-adapters/compare/535421e...d80cb2e) (2026-03-23)
+
+
+### Features
+
+* replace `addVikeMiddleware()` with a default `vike()` export ([68d26e8](https://github.com/vikejs/vike-server-adapters/commit/68d26e87ec5747a140e76e667c213aec81468988))
+
+
+### BREAKING CHANGES
+
+* `addVikeMiddleware()` removed, use the default export `vike()` instead
+
+
+
+# [0.1.0](https://github.com/vikejs/vike-server-adapters/tree/535421e) (2026-03-11)
+
+Initial release
