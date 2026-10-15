@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/vikejs/vike-server-adapters/compare/@vikejs/hono@0.4.0...@vikejs/hono@0.4.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* link each package's CHANGELOG.md from its README ([#18](https://github.com/vikejs/vike-server-adapters/issues/18)) ([30c3dc7](https://github.com/vikejs/vike-server-adapters/commit/30c3dc78ebdd06ac2de9b632e1e5c86daf8b968c))
+
+
+
 # @vikejs/hono
 
 # [0.4.0](https://github.com/vikejs/vike-server-adapters/compare/875539e...75ccee7) (2026-10-15)
