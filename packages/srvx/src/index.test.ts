@@ -1,8 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("vike/universal-middleware", () => ({ default: () => {} }));
-
+import { enhance } from "@universal-middleware/core";
+import { describe, expect, it } from "vitest";
 import vike, { apply } from "./index.js";
+import "../../../test/app/start.js";
 
 describe("@vikejs/srvx", () => {
   it("vike is a function", () => {
@@ -11,5 +10,99 @@ describe("@vikejs/srvx", () => {
 
   it("apply is a function", () => {
     expect(apply).toBeTypeOf("function");
+  });
+
+  // srvx has no app: the routes in `middlewares` are the app's routes
+  const send = (fetch: ReturnType<typeof vike>, path: string, init?: RequestInit) =>
+    fetch(new Request(`http://localhost${path}`, init) as never);
+  const apiRoute = async (_request: Request, context: Universal.Context) => {
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    return new Response((context as { user: string }).user);
+  };
+
+  it("runs the +middleware before a route in middlewares, and the route sees the context", async () => {
+    const fetch = vike([enhance(apiRoute, { name: "api", method: "GET", path: "/api/me" })]);
+
+    const response = await send(fetch, "/api/me", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("alice");
+  });
+
+  it("runs the +middleware before the middlewares passed to vike(), which see its context", async () => {
+    const fetch = vike([
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await send(fetch, "/", { headers: { "x-user": "alice" } });
+    expect(await response.text()).toBe("user alice");
+  });
+
+  it("applies the response step of a middleware passed to vike() to a response the +middleware returns", async () => {
+    const appHeader = enhance(
+      () => (response: Response) => {
+        response.headers.set("x-app", "applied");
+        return response;
+      },
+      { name: "app-header" },
+    );
+    const fetch = vike([appHeader]);
+
+    const response = await send(fetch, "/about", { headers: { "x-answer": "1" } });
+    expect([await response.text(), response.headers.get("x-app")]).toEqual(["+middleware", "applied"]);
+  });
+
+  it("answers with a +middleware that is a handler where no route in middlewares matches", async () => {
+    expect(await (await send(vike(), "/x")).text()).toBe("handler");
+  });
+
+  it("answers with the route in middlewares when a +middleware that is a handler has the same path", async () => {
+    const fetch = vike([enhance(() => new Response("app"), { name: "app-x", method: "GET", path: "/x" })]);
+
+    expect(await (await send(fetch, "/x")).text()).toBe("app");
+  });
+
+  it("applies the response step of the +middleware to the response of a route in middlewares, and of a page", async () => {
+    const fetch = vike([enhance(() => new Response("api"), { name: "api", method: "GET", path: "/api/me" })]);
+
+    for (const path of ["/api/me", "/about"]) {
+      expect((await send(fetch, path, { headers: { "x-step": "1" } })).headers.get("x-step")).toBe("applied");
+    }
+    expect((await send(fetch, "/api/me")).headers.get("x-step")).toBe(null);
+  });
+
+  it("keeps the context of concurrent requests apart", async () => {
+    const fetch = vike([enhance(apiRoute, { name: "api", method: "GET", path: "/api/me" })]);
+
+    const [alice, bob] = await Promise.all([
+      send(fetch, "/api/me", { headers: { "x-user": "alice", "x-meet": "1" } }),
+      send(fetch, "/api/me", { headers: { "x-user": "bob", "x-meet": "1" } }),
+    ]);
+    expect([await alice.text(), await bob.text()]).toEqual(["alice", "bob"]);
+  });
+
+  it("hands a JSON body to a route in middlewares", async () => {
+    const fetch = vike([
+      enhance(async (request: Request) => Response.json(await request.json()), {
+        name: "echo",
+        method: "POST",
+        path: "/api/echo",
+      }),
+    ]);
+
+    const response = await send(fetch, "/api/echo", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ a: 1 }),
+    });
+    expect(await response.json()).toEqual({ a: 1 });
+  });
+
+  it("renders a page where no route matches", async () => {
+    expect(await (await send(vike(), "/about")).text()).toContain("page /about");
+  });
+
+  it("answers with the route in middlewares when a page has the same path", async () => {
+    const fetch = vike([enhance(() => new Response("app"), { name: "about", method: "GET", path: "/about" })]);
+
+    expect(await (await send(fetch, "/about")).text()).toBe("app");
   });
 });

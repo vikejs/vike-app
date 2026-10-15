@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("vike/universal-middleware", () => ({ default: () => {} }));
-
-import vike, { apply, toFetchHandler } from "./index.js";
+import { enhance } from "@universal-middleware/core";
+import Fastify from "fastify";
+import { describe, expect, it } from "vitest";
+import vike, { apply, getContext, toFetchHandler } from "./index.js";
+import "../../../test/app/start.js";
 
 describe("@vikejs/fastify", () => {
   it("vike is a function", () => {
@@ -15,5 +15,139 @@ describe("@vikejs/fastify", () => {
 
   it("toFetchHandler is a function", () => {
     expect(toFetchHandler).toBeTypeOf("function");
+  });
+
+  const user = (request: Parameters<typeof getContext>[0]) => (getContext(request) as { user: string }).user;
+
+  it("runs the +middleware before a route registered after vike(app), and the route sees the context", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/api/me", (request) => ({ user: user(request) }));
+
+    const response = await app.inject({ url: "/api/me", headers: { "x-user": "alice" } });
+    expect(response.json()).toEqual({ user: "alice" });
+  });
+
+  it("runs the +middleware before the middlewares passed to vike(app), which see its context", async () => {
+    const app = Fastify();
+    await vike(app, [
+      enhance((_request, context) => new Response(`user ${(context as { user?: string }).user}`), { name: "extra" }),
+    ]);
+
+    const response = await app.inject({ url: "/", headers: { "x-user": "alice" } });
+    expect(response.body).toBe("user alice");
+  });
+
+  it("applies the response step of a middleware passed to vike(app) to a response the +middleware returns", async () => {
+    const appHeader = enhance(
+      () => (response: Response) => {
+        response.headers.set("x-app", "applied");
+        return response;
+      },
+      { name: "app-header" },
+    );
+    const app = Fastify();
+    await vike(app, [appHeader]);
+
+    const response = await app.inject({ url: "/about", headers: { "x-answer": "1" } });
+    expect([response.body, response.headers["x-app"]]).toEqual(["+middleware", "applied"]);
+  });
+
+  it("answers with a +middleware that is a handler where the app has no route", async () => {
+    const app = Fastify();
+    await vike(app);
+    expect((await app.inject({ url: "/x" })).body).toBe("handler");
+  });
+
+  it("answers with the app's route when a +middleware that is a handler has the same path", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/x", () => "app");
+    expect((await app.inject({ url: "/x" })).body).toBe("app");
+  });
+
+  it("answers with a handler passed to vike(app) after the app's routes", async () => {
+    const passed = enhance(() => new Response("passed"), { name: "passed", method: "GET", path: "/y/**" });
+    const app = Fastify();
+    await vike(app, [passed]);
+    app.get("/y/route", () => "app");
+    expect((await app.inject({ url: "/y/route" })).body).toBe("app");
+    expect((await app.inject({ url: "/y/other" })).body).toBe("passed");
+  });
+
+  it("applies the response step of the +middleware to the response of a route registered after vike(app), and of a page", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/api/me", () => "api");
+
+    for (const url of ["/api/me", "/about"]) {
+      expect((await app.inject({ url, headers: { "x-step": "1" } })).headers["x-step"]).toBe("applied");
+    }
+    expect((await app.inject({ url: "/api/me" })).headers["x-step"]).toBeUndefined();
+  });
+
+  it("renders a page after the app's routes", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/api/me", () => "api");
+
+    expect((await app.inject({ url: "/about" })).body).toContain("page /about");
+  });
+
+  it("answers with the app's route when a page has the same path", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/about", () => "app");
+
+    expect((await app.inject({ url: "/about" })).body).toBe("app");
+  });
+
+  it("answers Vike's 404 for DELETE, which Vike's pages don't declare, and the +middleware that aren't handlers run once", async () => {
+    let runs = 0;
+    const app = Fastify();
+    await vike(app, [
+      enhance(
+        (_request, context) => {
+          runs++;
+          return context;
+        },
+        { name: "count" },
+      ),
+    ]);
+
+    const response = await app.inject({ method: "DELETE", url: "/about" });
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toBe("Not Found");
+    expect(runs).toBe(1);
+  });
+
+  it("hands a JSON body to a route registered after vike(app)", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.post("/api/echo", (request) => request.body);
+
+    const response = await app.inject({ method: "POST", url: "/api/echo", payload: { a: 1 } });
+    expect(response.json()).toEqual({ a: 1 });
+  });
+
+  it("keeps the context of concurrent requests apart", async () => {
+    const app = Fastify();
+    await vike(app);
+    app.get("/api/me", async (request) => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      return user(request);
+    });
+
+    const [alice, bob] = await Promise.all([
+      app.inject({ url: "/api/me", headers: { "x-user": "alice", "x-meet": "1" } }),
+      app.inject({ url: "/api/me", headers: { "x-user": "bob", "x-meet": "1" } }),
+    ]);
+    expect([alice.body, bob.body]).toEqual(["alice", "bob"]);
+  });
+
+  it("throws when vike(app) is called twice on the same app", async () => {
+    const app = Fastify();
+    await vike(app);
+    expect(() => vike(app)).toThrow(/already called/);
   });
 });

@@ -1,30 +1,6 @@
 # `@vikejs/h3`
 
-[H3](https://h3.unjs.io) server adapter for [Vike](https://vike.dev).
+[H3](https://h3.dev) server adapter for [Vike](https://vike.dev).
 
-## Installation
-
-```sh
-npm install @vikejs/h3 h3
-```
-
-## Usage
-
-```ts
-import { createApp } from 'h3'
-import vike from '@vikejs/h3'
-
-const app = createApp()
-
-vike(app)
-
-export default app
-```
-
-You can pass additional [universal middlewares](https://github.com/magne4000/universal-middleware) as the second argument:
-
-```ts
-vike(app, [myMiddleware()])
-```
-
-This package also re-exports everything from [`@universal-middleware/h3`](https://github.com/magne4000/universal-middleware).
+Docs: see [vike.dev/server](https://vike.dev/server)  
+Source code: [GitHub > vikejs/vike-server-adapters](https://github.com/vikejs/vike-server-adapters)

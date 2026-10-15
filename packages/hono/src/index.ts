@@ -1,10 +1,97 @@
-import { type App, apply } from "@universal-middleware/hono";
-import vikeMiddleware from "vike/universal-middleware";
-
+export default vike;
 export * from "@universal-middleware/hono";
+
+import { type App, apply, createHandler } from "@universal-middleware/hono";
+import type { MiddlewareHandler } from "hono";
+import { getMiddlewaresPipe_handlers, getMiddlewaresPipe_nonHandlers } from "vike/__internal";
 
 type EnhancedMiddlewareHono = Parameters<typeof apply>[1][number];
 
-export default function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
-  return apply(app, [...middlewares, vikeMiddleware]);
+const installed = new WeakSet<App>();
+const errMsgExplanation =
+  "which breaks vike(app) (because vike(app) uses app.notFound() to mount Vike's server handlers)";
+const errMsgIntro = "[@vikejs/hono] Wrong installation:";
+
+/**
+ * Installs Vike's list of +middleware in the right order:
+ * - Server middlewares that aren't handlers first, before the app's routes
+ * - Handlers last, after the app's routes
+ *
+ * It also installs Vike's handler that renders pages.
+ */
+function vike(app: App, middlewares: EnhancedMiddlewareHono[] = []) {
+  if (installed.has(app)) {
+    const errMsg = `${errMsgIntro} vike(app) was already called on this app: call it once.` as const;
+    throw new Error(errMsg);
+  }
+  assertNoRouteBefore(app);
+  installed.add(app);
+
+  renderHandlersOnNotFound(app, middlewares);
+  guardAppNotFound(app);
+
+  const nonHandlersPipe = getMiddlewaresPipe_nonHandlers(middlewares);
+  return apply(app, [nonHandlersPipe]);
+}
+
+function assertNoRouteBefore(app: App) {
+  const route = app.routes.find((route) => route.method !== "OPTIONS" && isAppRoute(route));
+  if (route) {
+    const errMsg =
+      `${errMsgIntro} ${route.method} ${route.path} was registered before vike(app), but vike(app) should be called before registering the app's routes — see https://vike.dev/server` as const;
+    throw new Error(errMsg);
+  }
+}
+
+// `app.use()` registers `ALL`, so a `GET` or `POST` entry is a route the app wrote
+function isAppRoute({ method, path }: { method: string; path: string }) {
+  return method !== "ALL" && !path.includes("*");
+}
+
+// The contexts that went through the guard and whose routes haven't called `c.notFound()` since
+const fallThrough = new WeakSet<object>();
+
+function renderHandlersOnNotFound(app: App, middlewares: EnhancedMiddlewareHono[]) {
+  const handlersPipe = createHandler(() => getMiddlewaresPipe_handlers(middlewares))();
+  app.notFound(async (c) => {
+    // Hono calls this both when the routes pass the request on and when a route calls `c.notFound()`, which is a 404,
+    // including a route registered before vike(app), which ends the request before the guard
+    if (!fallThrough.has(c)) return c.text("404 Not Found", 404);
+    // Vike's handlers always answer, at worst with their own 404, so createHandler() never calls next()
+    return (await handlersPipe(c, async () => {})) as Response;
+  });
+}
+
+// Runs before the app's routes on every request
+function guardAppNotFound(app: App) {
+  let notFoundReplaced = false;
+  const setNotFound = app.notFound;
+  // Watches the app.notFound() calls made from now on, so it runs after renderHandlersOnNotFound()
+  app.notFound = (handler) => {
+    notFoundReplaced = true;
+    return setNotFound(handler);
+  };
+  const guard: MiddlewareHandler = async (c, next) => {
+    // Throws at the first request, where the app is complete: calling app.notFound() later would hide the pages
+    if (notFoundReplaced) {
+      const errMsg =
+        `${errMsgIntro} app.notFound() was called after vike(app), ${errMsgExplanation}. Use app.onError() or a route instead, or install Vike's server handlers manually: apply(app, globalContext.middlewares.filter((m) => m.isHandler))` as const;
+      throw new Error(errMsg);
+    }
+    // app.route() copies the routes but not app.notFound(), so a parent app would answer its own 404 instead of the pages
+    const route = c.req.matchedRoutes.find((route) => route.handler === guard);
+    if (!route || !app.routes.includes(route)) {
+      const errMsg =
+        `${errMsgIntro} an app that vike(app) was called on was mounted with app.route(), ${errMsgExplanation}. Call vike(app) on the app that serves the requests, the parent, and not on the mounted app.` as const;
+      throw new Error(errMsg);
+    }
+    fallThrough.add(c);
+    const notFound = c.notFound;
+    c.notFound = () => {
+      fallThrough.delete(c);
+      return notFound();
+    };
+    await next();
+  };
+  app.use(guard);
 }
