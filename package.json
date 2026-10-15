@@ -1,20 +1,20 @@
 {
-  "name": "vikejs-servers-workspace",
-  "private": true,
-  "version": "0.0.1",
-  "description": "Server adapters for Vike",
-  "type": "module",
   "scripts": {
+    "========= Build": "",
     "build": "pnpm -r run build",
+    "========= Formatting": "",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "check": "biome check --write .",
+    "========= Test": "",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
-    "release": "pnpm -r --workspace-concurrency=1 run release",
-    "release:minor": "pnpm -r --workspace-concurrency=1 run release:minor",
-    "release:major": "pnpm -r --workspace-concurrency=1 run release:major",
-    "release:commit": "pnpm -r --workspace-concurrency=1 run release:commit"
+    "========= Release": "",
+    "release": "pnpm --recursive --sequential run release --yes",
+    "========= Reset": "",
+    "reset": "git clean -Xdf && pnpm install && pnpm run build",
+    "========= Only allow pnpm; forbid yarn & npm": "",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
@@ -22,9 +22,6 @@
     "tsdown": "^0.21.10",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
-  },
-  "engines": {
-    "node": ">=20.0.0"
   },
   "packageManager": "pnpm@11.8.0"
 }
