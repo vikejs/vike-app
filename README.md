@@ -6,14 +6,14 @@ Docs: [vike.dev/server](https://vike.dev/server)
 
 ## Packages
 
-| Framework | Npm package | Changelog | Source code |
+| Framework | Npm package | Source code | Changelog |
 |---|---|---|---|
-| [Hono](https://hono.dev) | [`@vikejs/hono`](https://www.npmjs.com/package/@vikejs/hono) | [CHANGELOG.md](packages/hono/CHANGELOG.md) | [`packages/hono/`](packages/hono) |
-| [Express](https://expressjs.com) | [`@vikejs/express`](https://www.npmjs.com/package/@vikejs/express) | [CHANGELOG.md](packages/express/CHANGELOG.md) | [`packages/express/`](packages/express) |
-| [Fastify](https://fastify.dev) | [`@vikejs/fastify`](https://www.npmjs.com/package/@vikejs/fastify) | [CHANGELOG.md](packages/fastify/CHANGELOG.md) | [`packages/fastify/`](packages/fastify) |
-| [H3](https://h3.dev) | [`@vikejs/h3`](https://www.npmjs.com/package/@vikejs/h3) | [CHANGELOG.md](packages/h3/CHANGELOG.md) | [`packages/h3/`](packages/h3) |
-| [Elysia](https://elysiajs.com) | [`@vikejs/elysia`](https://www.npmjs.com/package/@vikejs/elysia) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) | [`packages/elysia/`](packages/elysia) |
-| [srvx](https://srvx.unjs.io) | [`@vikejs/srvx`](https://www.npmjs.com/package/@vikejs/srvx) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) | [`packages/srvx/`](packages/srvx) |
+| [Hono](https://hono.dev) | [`@vikejs/hono`](https://www.npmjs.com/package/@vikejs/hono) | [`packages/hono/`](packages/hono) | [CHANGELOG.md](packages/hono/CHANGELOG.md) |
+| [Express](https://expressjs.com) | [`@vikejs/express`](https://www.npmjs.com/package/@vikejs/express) | [`packages/express/`](packages/express) | [CHANGELOG.md](packages/express/CHANGELOG.md) |
+| [Fastify](https://fastify.dev) | [`@vikejs/fastify`](https://www.npmjs.com/package/@vikejs/fastify) | [`packages/fastify/`](packages/fastify) | [CHANGELOG.md](packages/fastify/CHANGELOG.md) |
+| [H3](https://h3.dev) | [`@vikejs/h3`](https://www.npmjs.com/package/@vikejs/h3) | [`packages/h3/`](packages/h3) | [CHANGELOG.md](packages/h3/CHANGELOG.md) |
+| [Elysia](https://elysiajs.com) | [`@vikejs/elysia`](https://www.npmjs.com/package/@vikejs/elysia) | [`packages/elysia/`](packages/elysia) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) |
+| [srvx](https://srvx.unjs.io) | [`@vikejs/srvx`](https://www.npmjs.com/package/@vikejs/srvx) | [`packages/srvx/`](packages/srvx) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) |
 
 ## Sandwich approach
 
