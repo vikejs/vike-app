@@ -35,3 +35,23 @@ Each server adapter tests the three layers (`packages/*/src/index.test.ts`).
 pnpm install
 pnpm build
 ```
+
+### Commit messages
+
+Each package's `CHANGELOG.md` is generated from the [Conventional Commits](https://www.conventionalcommits.org) (`fix:`, `feat:`, `perf:`, `BREAKING CHANGE:`) that modify the package's directory. A commit with a scope is included only if the scope is the full package name: use `fix: ...` or `fix(@vikejs/express): ...`, not `fix(express): ...`.
+
+When a pull request is squash merged, its title becomes the commit message, so this also applies to pull request titles.
+
+### Release
+
+Each package is released on its own with [`@brillout/release-me`](https://github.com/brillout/release-me), from an up-to-date `main` branch:
+
+```sh
+cd packages/hono
+pnpm run release         # patch: 0.4.0 => 0.4.1
+pnpm run release:minor   # minor: 0.4.0 => 0.5.0 (also for breaking changes, while the version is 0.x)
+pnpm run release:major   # major: 0.4.0 => 1.0.0
+pnpm run release:commit  # pre-release: 0.4.0-commit-a1b2c3d, published right away
+```
+
+The other scripts preview the `CHANGELOG.md` and `package.json` changes and ask for confirmation, then build and publish the package, and push a release commit and a Git tag (e.g. `@vikejs/hono@0.4.1`).

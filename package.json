@@ -10,13 +10,10 @@
     "lint": "biome lint .",
     "check": "biome check --write .",
     "typecheck": "pnpm -r run typecheck",
-    "changeset": "changeset",
-    "release": "pnpm -r run build && changeset version && pnpm i && pnpm publish -r",
     "test": "pnpm -r run test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
-    "@changesets/cli": "^2.31.0",
     "@types/node": "^20.19.43",
     "tsdown": "^0.21.10",
     "typescript": "^5.9.3",
