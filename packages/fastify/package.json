@@ -14,17 +14,25 @@
     "url": "https://github.com/vikejs/vike-server-adapters"
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "release": "release-me patch",
+    "release:minor": "release-me minor",
+    "release:major": "release-me major",
+    "release:commit": "release-me commit"
   },
   "dependencies": {
     "@universal-middleware/fastify": "^0.7.0",
     "srvx": "^0.11.17"
   },
   "devDependencies": {
+    "@brillout/release-me": "^0.4.19",
     "@types/node": "^20.19.43",
     "@universal-middleware/core": "^0.7.1",
     "fastify": "^5.12.5",
