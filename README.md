@@ -21,7 +21,7 @@ Docs: [vike.dev/server](https://vike.dev/server)
 
 ## Sandwich approach
 
-[`vike(app)`](https://vike.dev/vike(app)) installs [Vike middlewares](https://vike.dev/globalContext#middlewares) following a *sandwich approach* — it places the user's routes between Vike middlewares:
+[`vike(app)`](https://vike.dev/vike(app)) installs [Vike middlewares](https://vike.dev/globalContext#middlewares) following a "sandwich approach" — it places the user's routes between Vike middlewares:
 
 1. Vike middlewares that aren't handlers run first — so that the user's routes see the context added by Vike middlewares.
 2. The user's routes registered after `vike(app)` come next.
