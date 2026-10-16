@@ -4,6 +4,8 @@ Server adapters integrating [Vike](https://vike.dev) with various server framewo
 
 Docs: [vike.dev/server](https://vike.dev/server)
 
+<br/>
+
 ## Packages
 
 | Framework | Npm package | Source code | Changelog |
@@ -15,12 +17,18 @@ Docs: [vike.dev/server](https://vike.dev/server)
 | [Elysia](https://elysiajs.com) | [`@vikejs/elysia`](https://www.npmjs.com/package/@vikejs/elysia) | [`packages/elysia/`](packages/elysia) | [CHANGELOG.md](packages/elysia/CHANGELOG.md) |
 | [srvx](https://srvx.unjs.io) | [`@vikejs/srvx`](https://www.npmjs.com/package/@vikejs/srvx) | [`packages/srvx/`](packages/srvx) | [CHANGELOG.md](packages/srvx/CHANGELOG.md) |
 
+<br/>
+
 ## Sandwich approach
 
-`vike(app)` puts the app's routes between Vike's +middleware:
+[`vike(app)`](https://vike.dev/vike(app)) installs [Vike middlewares](https://vike.dev/globalContext#middlewares) following a *sandwich approach* — it places the user's routes between Vike middlewares:
 
-1. The +middleware that aren't handlers run first, and the app's routes see the context they add.
-2. The app's routes registered after `vike(app)` come next.
-3. The +middleware that are handlers and Vike's page handler run last: they answer the requests no route answers.
+1. Vike middlewares that aren't handlers run first — so that the user's routes see the context added by Vike middlewares.
+2. The user's routes registered after `vike(app)` come next.
+3. Vike middlewares that are handlers run last — they answer requests that no user route answered.
 
-Each server adapter tests the three layers (`packages/*/src/index.test.ts`).
+> [!NOTE]
+> See also: [Vike > API > `vike(app)`](https://vike.dev/vike(app))
+
+> [!NOTE]
+> Each server adapter has tests to verify it follows the sandwich approach (`packages/*/src/index.test.ts`).
