@@ -1,6 +1,6 @@
-# `vikejs/vike-server-adapters`
+# `vike(app)`
 
-Server adapters ([`vike(app)`](https://vike.dev/vike(app))) integrating [Vike](https://vike.dev) with various server frameworks.
+Server adapters integrating [Vike](https://vike.dev) with various server frameworks.
 
 Docs:
 - [Vike > Integration > `+server`](https://vike.dev/server)
@@ -9,6 +9,8 @@ Docs:
 <br/>
 
 ## Packages
+
+The following packages provide the `vike(app)` server adapter for each server framework:
 
 | Framework | Npm package | Source code | Changelog |
 |---|---|---|---|
