@@ -25,7 +25,7 @@ Docs: [vike.dev/server](https://vike.dev/server)
 
 1. Vike middlewares that aren't handlers run first — so that the user's routes see the context added by Vike middlewares.
 2. The user's routes come next.
-3. Vike middlewares that are handlers run last — they answer requests that no user route answered.
+3. Vike middlewares that are handlers run last — they answer requests that the user's routes didn't answer.
 
 > [!NOTE]
 > See also: [Vike > API > `vike(app)`](https://vike.dev/vike(app))
