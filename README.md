@@ -1,8 +1,10 @@
 # `vikejs/vike-server-adapters`
 
-Server adapters integrating [Vike](https://vike.dev) with various server frameworks.
+Server adapters ([`vike(app)`](https://vike.dev/vike(app))) integrating [Vike](https://vike.dev) with various server frameworks.
 
-Docs: [vike.dev/server](https://vike.dev/server)
+Docs:
+- [Vike > Integration > `+server`](https://vike.dev/server)
+- [Vike > API > `vike(app)`](https://vike.dev/vike(app))
 
 <br/>
 
