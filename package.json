@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
-    "@brillout/release-me": "^0.5.2",
+    "@brillout/release-me": "^0.5.8",
     "@types/node": "^20.19.43",
     "tsdown": "^0.21.10",
     "typescript": "^5.9.3",
