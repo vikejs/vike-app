@@ -6,4 +6,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@universal-middleware/*'
   - vike@0.4.268
-  - '@brillout/release-me@0.5.1'
+  - '@brillout/release-me@0.5.2'
