@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vikejs/vike-server-adapters"
+    "url": "https://github.com/vikejs/vike-app"
   },
   "license": "MIT",
   "publishConfig": {
@@ -31,7 +31,6 @@
     "@universal-middleware/hono": "^0.6.0"
   },
   "devDependencies": {
-    "@brillout/release-me": "^0.4.19",
     "@types/node": "^20.19.43",
     "@universal-middleware/core": "^0.7.1",
     "hono": "^4.13.13",
