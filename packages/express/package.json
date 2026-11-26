@@ -31,7 +31,6 @@
     "@universal-middleware/express": "^0.6.0"
   },
   "devDependencies": {
-    "@brillout/release-me": "^0.4.19",
     "@types/connect": "^3.4.38",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

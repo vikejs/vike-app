@@ -31,7 +31,6 @@
     "@universal-middleware/h3": "^0.7.0"
   },
   "devDependencies": {
-    "@brillout/release-me": "^0.4.19",
     "@types/node": "^20.19.43",
     "@universal-middleware/core": "^0.7.1",
     "h3": "^2.0.2",
